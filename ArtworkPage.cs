@@ -99,7 +99,36 @@ namespace Activity_7
 
         private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
+            ProfileMenuStrip.Show(linkLabel5, new Point(0, linkLabel5.Height));
+        }
 
+        private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            myAccount my_AccountForm = new myAccount();
+            my_AccountForm.ShowDialog();
+        }
+
+        private void likesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void commentsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Login loginForm = new Login();
+            loginForm.ShowDialog();
         }
     }
 }

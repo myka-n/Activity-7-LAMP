@@ -785,37 +785,42 @@
             // 
             ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, likesToolStripMenuItem, commentsToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
             ProfileMenuStrip.Name = "contextMenuStrip1";
-            ProfileMenuStrip.Size = new Size(181, 136);
+            ProfileMenuStrip.Size = new Size(140, 114);
             // 
             // myAccountToolStripMenuItem
             // 
             myAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
-            myAccountToolStripMenuItem.Size = new Size(180, 22);
+            myAccountToolStripMenuItem.Size = new Size(139, 22);
             myAccountToolStripMenuItem.Text = "My Account";
+            myAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
             // 
             // likesToolStripMenuItem
             // 
             likesToolStripMenuItem.Name = "likesToolStripMenuItem";
-            likesToolStripMenuItem.Size = new Size(180, 22);
+            likesToolStripMenuItem.Size = new Size(139, 22);
             likesToolStripMenuItem.Text = "Likes";
+            likesToolStripMenuItem.Click += likesToolStripMenuItem_Click;
             // 
             // commentsToolStripMenuItem
             // 
             commentsToolStripMenuItem.Name = "commentsToolStripMenuItem";
-            commentsToolStripMenuItem.Size = new Size(180, 22);
+            commentsToolStripMenuItem.Size = new Size(139, 22);
             commentsToolStripMenuItem.Text = "Comments";
+            commentsToolStripMenuItem.Click += commentsToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(139, 22);
             settingsToolStripMenuItem.Text = "Settings";
+            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // logoutToolStripMenuItem
             // 
             logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            logoutToolStripMenuItem.Size = new Size(180, 22);
+            logoutToolStripMenuItem.Size = new Size(139, 22);
             logoutToolStripMenuItem.Text = "Logout";
+            logoutToolStripMenuItem.Click += logoutToolStripMenuItem_Click;
             // 
             // ArtworkPage
             // 

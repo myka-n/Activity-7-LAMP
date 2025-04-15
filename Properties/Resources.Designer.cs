@@ -123,6 +123,16 @@ namespace Activity_7.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap download__1_ {
+            get {
+                object obj = ResourceManager.GetObject("download (1)", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap eyy_20240211103712 {
             get {
                 object obj = ResourceManager.GetObject("eyy_20240211103712", resourceCulture);
@@ -193,9 +203,29 @@ namespace Activity_7.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Untitled109_20230723190327 {
+            get {
+                object obj = ResourceManager.GetObject("Untitled109_20230723190327", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Untitled58_20221225121714 {
             get {
                 object obj = ResourceManager.GetObject("Untitled58_20221225121714", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Untitled6_20220719212706 {
+            get {
+                object obj = ResourceManager.GetObject("Untitled6_20220719212706", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
