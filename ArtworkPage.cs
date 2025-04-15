@@ -82,5 +82,24 @@ namespace Activity_7
         {
 
         }
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            Homepage homepageForm = new Homepage();
+            homepageForm.ShowDialog();
+        }
+
+        private void pictureBox11_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            Homepage homepageForm = new Homepage();
+            homepageForm.ShowDialog();
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+
+        }
     }
 }

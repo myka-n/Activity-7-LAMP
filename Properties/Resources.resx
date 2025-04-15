@@ -127,8 +127,8 @@
   <data name="487992110_1648939996013765_4619232922560852750_n" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\487992110_1648939996013765_4619232922560852750_n.jpg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Go on an adventure (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\Go on an adventure (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="HIRAYA (ready to print)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\HIRAYA (ready to print).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Go on an adventure" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Go on an adventure.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -142,8 +142,11 @@
   <data name="Go on an adventure (1)1" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Go on an adventure (1)1.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="HIRAYA (ready to print)" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\HIRAYA (ready to print).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="eyy_20240211103712" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\eyy_20240211103712.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Go on an adventure (1)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Go on an adventure (1).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
   <data name="Untitled58_20221225121714" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Untitled58_20221225121714.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
@@ -151,7 +154,10 @@
   <data name="copyofsurreal" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\copyofsurreal.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="eyy_20240211103712" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\eyy_20240211103712.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  <data name="images (2)" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\images (2).png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="images" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\images.jpeg;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>

@@ -96,5 +96,27 @@ namespace Activity_7
         {
 
         }
+
+        private void pictureBox2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void panel5_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void panel7_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void button3_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            ArtworkPage artworkPageForm = new ArtworkPage();
+            artworkPageForm.ShowDialog();
+        }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             panel2 = new Panel();
             flowLayoutPanel1 = new FlowLayoutPanel();
             pictureBox1 = new PictureBox();
@@ -40,6 +41,14 @@
             linkLabel7 = new LinkLabel();
             textBox1 = new TextBox();
             panel7 = new Panel();
+            button1 = new Button();
+            label27 = new Label();
+            comboBox1 = new ComboBox();
+            label25 = new Label();
+            pictureBox14 = new PictureBox();
+            label19 = new Label();
+            label22 = new Label();
+            textBox2 = new TextBox();
             linkLabel8 = new LinkLabel();
             Comment = new LinkLabel();
             linkLabel6 = new LinkLabel();
@@ -82,19 +91,19 @@
             label11 = new Label();
             pictureBox10 = new PictureBox();
             panel10 = new Panel();
-            textBox2 = new TextBox();
-            pictureBox14 = new PictureBox();
-            label19 = new Label();
-            label22 = new Label();
-            label25 = new Label();
-            comboBox1 = new ComboBox();
-            label27 = new Label();
-            button1 = new Button();
+            pictureBox11 = new PictureBox();
+            ProfileMenuStrip = new ContextMenuStrip(components);
+            myAccountToolStripMenuItem = new ToolStripMenuItem();
+            likesToolStripMenuItem = new ToolStripMenuItem();
+            commentsToolStripMenuItem = new ToolStripMenuItem();
+            settingsToolStripMenuItem = new ToolStripMenuItem();
+            logoutToolStripMenuItem = new ToolStripMenuItem();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             flowLayoutPanel2.SuspendLayout();
             panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox14).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox12).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
             flowLayoutPanel3.SuspendLayout();
@@ -115,7 +124,8 @@
             panel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).BeginInit();
             panel10.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox14).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).BeginInit();
+            ProfileMenuStrip.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
@@ -165,6 +175,7 @@
             linkLabel1.TabIndex = 1;
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Home";
+            linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
             // linkLabel2
             // 
@@ -234,6 +245,7 @@
             linkLabel5.TabIndex = 5;
             linkLabel5.TabStop = true;
             linkLabel5.Text = "Profile";
+            linkLabel5.LinkClicked += linkLabel5_LinkClicked;
             // 
             // linkLabel7
             // 
@@ -279,6 +291,77 @@
             panel7.Size = new Size(451, 352);
             panel7.TabIndex = 16;
             panel7.Paint += panel7_Paint_1;
+            // 
+            // button1
+            // 
+            button1.Location = new Point(366, 315);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 28;
+            button1.Text = "Comment";
+            button1.UseVisualStyleBackColor = true;
+            // 
+            // label27
+            // 
+            label27.AutoSize = true;
+            label27.Location = new Point(15, 297);
+            label27.Name = "label27";
+            label27.Size = new Size(163, 15);
+            label27.TabIndex = 27;
+            label27.Text = "What do you think of this art?";
+            // 
+            // comboBox1
+            // 
+            comboBox1.FormattingEnabled = true;
+            comboBox1.Items.AddRange(new object[] { "View All Comments", "Top Comments", "Most recent comments" });
+            comboBox1.Location = new Point(314, 201);
+            comboBox1.Name = "comboBox1";
+            comboBox1.Size = new Size(121, 23);
+            comboBox1.TabIndex = 26;
+            comboBox1.Text = "View Comments";
+            // 
+            // label25
+            // 
+            label25.Location = new Point(7, 174);
+            label25.Name = "label25";
+            label25.Size = new Size(434, 24);
+            label25.TabIndex = 24;
+            label25.Text = "______________________________________________________________________________________________________________________";
+            label25.Click += label25_Click;
+            // 
+            // pictureBox14
+            // 
+            pictureBox14.Image = Properties.Resources.Untitled58_20221225121714;
+            pictureBox14.Location = new Point(15, 227);
+            pictureBox14.Name = "pictureBox14";
+            pictureBox14.Size = new Size(32, 22);
+            pictureBox14.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox14.TabIndex = 23;
+            pictureBox14.TabStop = false;
+            // 
+            // label19
+            // 
+            label19.Location = new Point(15, 252);
+            label19.Name = "label19";
+            label19.Size = new Size(390, 45);
+            label19.TabIndex = 22;
+            label19.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new Point(53, 227);
+            label22.Name = "label22";
+            label22.Size = new Size(50, 15);
+            label22.TabIndex = 21;
+            label22.Text = "Zee Arts";
+            // 
+            // textBox2
+            // 
+            textBox2.Location = new Point(15, 315);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(345, 23);
+            textBox2.TabIndex = 20;
             // 
             // linkLabel8
             // 
@@ -678,6 +761,7 @@
             // panel10
             // 
             panel10.AutoScroll = true;
+            panel10.Controls.Add(pictureBox11);
             panel10.Controls.Add(panel7);
             panel10.Controls.Add(flowLayoutPanel3);
             panel10.Location = new Point(16, 39);
@@ -685,81 +769,59 @@
             panel10.Size = new Size(573, 883);
             panel10.TabIndex = 22;
             // 
-            // textBox2
+            // pictureBox11
             // 
-            textBox2.Location = new Point(15, 315);
-            textBox2.Name = "textBox2";
-            textBox2.Size = new Size(345, 23);
-            textBox2.TabIndex = 20;
+            pictureBox11.BackColor = Color.White;
+            pictureBox11.Image = Properties.Resources.images;
+            pictureBox11.Location = new Point(33, 17);
+            pictureBox11.Name = "pictureBox11";
+            pictureBox11.Size = new Size(21, 17);
+            pictureBox11.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox11.TabIndex = 22;
+            pictureBox11.TabStop = false;
+            pictureBox11.Click += pictureBox11_Click;
             // 
-            // pictureBox14
+            // ProfileMenuStrip
             // 
-            pictureBox14.Image = Properties.Resources.Untitled58_20221225121714;
-            pictureBox14.Location = new Point(15, 227);
-            pictureBox14.Name = "pictureBox14";
-            pictureBox14.Size = new Size(32, 22);
-            pictureBox14.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox14.TabIndex = 23;
-            pictureBox14.TabStop = false;
+            ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, likesToolStripMenuItem, commentsToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
+            ProfileMenuStrip.Name = "contextMenuStrip1";
+            ProfileMenuStrip.Size = new Size(181, 136);
             // 
-            // label19
+            // myAccountToolStripMenuItem
             // 
-            label19.Location = new Point(15, 252);
-            label19.Name = "label19";
-            label19.Size = new Size(390, 45);
-            label19.TabIndex = 22;
-            label19.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
+            myAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
+            myAccountToolStripMenuItem.Size = new Size(180, 22);
+            myAccountToolStripMenuItem.Text = "My Account";
             // 
-            // label22
+            // likesToolStripMenuItem
             // 
-            label22.AutoSize = true;
-            label22.Location = new Point(53, 227);
-            label22.Name = "label22";
-            label22.Size = new Size(50, 15);
-            label22.TabIndex = 21;
-            label22.Text = "Zee Arts";
+            likesToolStripMenuItem.Name = "likesToolStripMenuItem";
+            likesToolStripMenuItem.Size = new Size(180, 22);
+            likesToolStripMenuItem.Text = "Likes";
             // 
-            // label25
+            // commentsToolStripMenuItem
             // 
-            label25.Location = new Point(7, 174);
-            label25.Name = "label25";
-            label25.Size = new Size(444, 24);
-            label25.TabIndex = 24;
-            label25.Text = "______________________________________________________________________________________________________________________";
-            label25.Click += label25_Click;
+            commentsToolStripMenuItem.Name = "commentsToolStripMenuItem";
+            commentsToolStripMenuItem.Size = new Size(180, 22);
+            commentsToolStripMenuItem.Text = "Comments";
             // 
-            // comboBox1
+            // settingsToolStripMenuItem
             // 
-            comboBox1.FormattingEnabled = true;
-            comboBox1.Items.AddRange(new object[] { "View All Comments", "Top Comments", "Most recent comments" });
-            comboBox1.Location = new Point(314, 201);
-            comboBox1.Name = "comboBox1";
-            comboBox1.Size = new Size(121, 23);
-            comboBox1.TabIndex = 26;
-            comboBox1.Text = "View Comments";
+            settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
+            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Text = "Settings";
             // 
-            // label27
+            // logoutToolStripMenuItem
             // 
-            label27.AutoSize = true;
-            label27.Location = new Point(15, 297);
-            label27.Name = "label27";
-            label27.Size = new Size(163, 15);
-            label27.TabIndex = 27;
-            label27.Text = "What do you think of this art?";
-            // 
-            // button1
-            // 
-            button1.Location = new Point(366, 315);
-            button1.Name = "button1";
-            button1.Size = new Size(75, 23);
-            button1.TabIndex = 28;
-            button1.Text = "Comment";
-            button1.UseVisualStyleBackColor = true;
+            logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
+            logoutToolStripMenuItem.Size = new Size(180, 22);
+            logoutToolStripMenuItem.Text = "Logout";
             // 
             // ArtworkPage
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
+            BackColor = SystemColors.ControlLightLight;
             ClientSize = new Size(599, 749);
             Controls.Add(panel10);
             Controls.Add(panel2);
@@ -773,6 +835,7 @@
             flowLayoutPanel2.PerformLayout();
             panel7.ResumeLayout(false);
             panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox14).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox12).EndInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
@@ -801,7 +864,8 @@
             panel6.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox10).EndInit();
             panel10.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox14).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox11).EndInit();
+            ProfileMenuStrip.ResumeLayout(false);
             ResumeLayout(false);
         }
 
@@ -869,5 +933,12 @@
         private Label label25;
         private Label label27;
         private Button button1;
+        private PictureBox pictureBox11;
+        private ContextMenuStrip ProfileMenuStrip;
+        private ToolStripMenuItem myAccountToolStripMenuItem;
+        private ToolStripMenuItem likesToolStripMenuItem;
+        private ToolStripMenuItem commentsToolStripMenuItem;
+        private ToolStripMenuItem settingsToolStripMenuItem;
+        private ToolStripMenuItem logoutToolStripMenuItem;
     }
 }

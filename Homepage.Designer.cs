@@ -54,6 +54,7 @@
             label5 = new Label();
             pictureBox5 = new PictureBox();
             panel7 = new Panel();
+            button3 = new Button();
             pictureBox12 = new PictureBox();
             label9 = new Label();
             label6 = new Label();
@@ -62,6 +63,23 @@
             label7 = new Label();
             pictureBox7 = new PictureBox();
             panel1 = new Panel();
+            flowLayoutPanel6 = new FlowLayoutPanel();
+            panel19 = new Panel();
+            label28 = new Label();
+            label29 = new Label();
+            pictureBox17 = new PictureBox();
+            panel20 = new Panel();
+            label31 = new Label();
+            label32 = new Label();
+            pictureBox18 = new PictureBox();
+            panel21 = new Panel();
+            label34 = new Label();
+            label35 = new Label();
+            pictureBox19 = new PictureBox();
+            panel22 = new Panel();
+            label37 = new Label();
+            label38 = new Label();
+            pictureBox20 = new PictureBox();
             label14 = new Label();
             label2 = new Label();
             flowLayoutPanel4 = new FlowLayoutPanel();
@@ -90,14 +108,14 @@
             pictureBox16 = new PictureBox();
             linkLabel6 = new LinkLabel();
             flowLayoutPanel3 = new FlowLayoutPanel();
-            pictureBox8 = new PictureBox();
-            panel10 = new Panel();
-            Welcome = new Button();
-            label8 = new Label();
             panel5 = new Panel();
+            label16 = new Label();
+            label17 = new Label();
             label15 = new Label();
             pictureBox2 = new PictureBox();
             panel16 = new Panel();
+            label18 = new Label();
+            label19 = new Label();
             label20 = new Label();
             pictureBox3 = new PictureBox();
             panel17 = new Panel();
@@ -106,31 +124,14 @@
             label23 = new Label();
             pictureBox4 = new PictureBox();
             panel18 = new Panel();
-            label26 = new Label();
-            pictureBox9 = new PictureBox();
-            label18 = new Label();
-            label19 = new Label();
-            label16 = new Label();
-            label17 = new Label();
             label24 = new Label();
             label25 = new Label();
-            flowLayoutPanel6 = new FlowLayoutPanel();
-            panel19 = new Panel();
-            label28 = new Label();
-            label29 = new Label();
-            pictureBox17 = new PictureBox();
-            panel20 = new Panel();
-            label31 = new Label();
-            label32 = new Label();
-            pictureBox18 = new PictureBox();
-            panel21 = new Panel();
-            label34 = new Label();
-            label35 = new Label();
-            pictureBox19 = new PictureBox();
-            panel22 = new Panel();
-            label37 = new Label();
-            label38 = new Label();
-            pictureBox20 = new PictureBox();
+            label26 = new Label();
+            pictureBox9 = new PictureBox();
+            pictureBox8 = new PictureBox();
+            panel10 = new Panel();
+            Welcome = new Button();
+            label8 = new Label();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             panel2.SuspendLayout();
@@ -144,6 +145,15 @@
             panel8.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox7).BeginInit();
             panel1.SuspendLayout();
+            flowLayoutPanel6.SuspendLayout();
+            panel19.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox17).BeginInit();
+            panel20.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox18).BeginInit();
+            panel21.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox19).BeginInit();
+            panel22.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox20).BeginInit();
             flowLayoutPanel4.SuspendLayout();
             panel4.SuspendLayout();
             panel3.SuspendLayout();
@@ -161,8 +171,6 @@
             panel15.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox16).BeginInit();
             flowLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
-            panel10.SuspendLayout();
             panel5.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             panel16.SuspendLayout();
@@ -171,15 +179,8 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
             panel18.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox9).BeginInit();
-            flowLayoutPanel6.SuspendLayout();
-            panel19.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox17).BeginInit();
-            panel20.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox18).BeginInit();
-            panel21.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox19).BeginInit();
-            panel22.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox20).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox8).BeginInit();
+            panel10.SuspendLayout();
             SuspendLayout();
             // 
             // statusStrip1
@@ -420,6 +421,7 @@
             // panel7
             // 
             panel7.BorderStyle = BorderStyle.FixedSingle;
+            panel7.Controls.Add(button3);
             panel7.Controls.Add(pictureBox12);
             panel7.Controls.Add(label9);
             panel7.Controls.Add(label6);
@@ -428,6 +430,17 @@
             panel7.Name = "panel7";
             panel7.Size = new Size(507, 136);
             panel7.TabIndex = 15;
+            panel7.Paint += panel7_Paint;
+            // 
+            // button3
+            // 
+            button3.Location = new Point(265, 104);
+            button3.Name = "button3";
+            button3.Size = new Size(75, 23);
+            button3.TabIndex = 16;
+            button3.Text = "button3";
+            button3.UseVisualStyleBackColor = true;
+            button3.Click += button3_Click;
             // 
             // pictureBox12
             // 
@@ -499,6 +512,7 @@
             // 
             panel1.AutoScroll = true;
             panel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            panel1.BackColor = Color.White;
             panel1.Controls.Add(flowLayoutPanel6);
             panel1.Controls.Add(label14);
             panel1.Controls.Add(label2);
@@ -513,6 +527,169 @@
             panel1.Size = new Size(601, 1163);
             panel1.TabIndex = 17;
             panel1.Paint += panel1_Paint;
+            // 
+            // flowLayoutPanel6
+            // 
+            flowLayoutPanel6.Controls.Add(panel19);
+            flowLayoutPanel6.Controls.Add(panel20);
+            flowLayoutPanel6.Controls.Add(panel21);
+            flowLayoutPanel6.Controls.Add(panel22);
+            flowLayoutPanel6.Location = new Point(44, 959);
+            flowLayoutPanel6.Name = "flowLayoutPanel6";
+            flowLayoutPanel6.Size = new Size(506, 174);
+            flowLayoutPanel6.TabIndex = 24;
+            // 
+            // panel19
+            // 
+            panel19.Controls.Add(label28);
+            panel19.Controls.Add(label29);
+            panel19.Controls.Add(pictureBox17);
+            panel19.Location = new Point(3, 3);
+            panel19.Name = "panel19";
+            panel19.Size = new Size(122, 160);
+            panel19.TabIndex = 15;
+            // 
+            // label28
+            // 
+            label28.AutoSize = true;
+            label28.Location = new Point(19, 129);
+            label28.Name = "label28";
+            label28.Size = new Size(70, 15);
+            label28.TabIndex = 18;
+            label28.Text = "Artist Name";
+            // 
+            // label29
+            // 
+            label29.AutoSize = true;
+            label29.Location = new Point(51, 164);
+            label29.Name = "label29";
+            label29.Size = new Size(40, 15);
+            label29.TabIndex = 13;
+            label29.Text = "Home";
+            // 
+            // pictureBox17
+            // 
+            pictureBox17.Image = Properties.Resources.Go_on_an_adventure;
+            pictureBox17.Location = new Point(0, 0);
+            pictureBox17.Name = "pictureBox17";
+            pictureBox17.Size = new Size(122, 127);
+            pictureBox17.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox17.TabIndex = 9;
+            pictureBox17.TabStop = false;
+            // 
+            // panel20
+            // 
+            panel20.Controls.Add(label31);
+            panel20.Controls.Add(label32);
+            panel20.Controls.Add(pictureBox18);
+            panel20.Location = new Point(131, 3);
+            panel20.Name = "panel20";
+            panel20.Size = new Size(122, 160);
+            panel20.TabIndex = 16;
+            // 
+            // label31
+            // 
+            label31.AutoSize = true;
+            label31.Location = new Point(27, 130);
+            label31.Name = "label31";
+            label31.Size = new Size(70, 15);
+            label31.TabIndex = 16;
+            label31.Text = "Artist Name";
+            // 
+            // label32
+            // 
+            label32.AutoSize = true;
+            label32.Location = new Point(51, 164);
+            label32.Name = "label32";
+            label32.Size = new Size(40, 15);
+            label32.TabIndex = 13;
+            label32.Text = "Home";
+            // 
+            // pictureBox18
+            // 
+            pictureBox18.Image = Properties.Resources.Go_on_an_adventure__1_1;
+            pictureBox18.Location = new Point(0, 0);
+            pictureBox18.Name = "pictureBox18";
+            pictureBox18.Size = new Size(122, 127);
+            pictureBox18.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox18.TabIndex = 9;
+            pictureBox18.TabStop = false;
+            // 
+            // panel21
+            // 
+            panel21.Controls.Add(label34);
+            panel21.Controls.Add(label35);
+            panel21.Controls.Add(pictureBox19);
+            panel21.Location = new Point(259, 3);
+            panel21.Name = "panel21";
+            panel21.Size = new Size(112, 160);
+            panel21.TabIndex = 17;
+            // 
+            // label34
+            // 
+            label34.AutoSize = true;
+            label34.Location = new Point(21, 129);
+            label34.Name = "label34";
+            label34.Size = new Size(70, 15);
+            label34.TabIndex = 14;
+            label34.Text = "Artist Name";
+            // 
+            // label35
+            // 
+            label35.AutoSize = true;
+            label35.Location = new Point(51, 164);
+            label35.Name = "label35";
+            label35.Size = new Size(40, 15);
+            label35.TabIndex = 13;
+            label35.Text = "Home";
+            // 
+            // pictureBox19
+            // 
+            pictureBox19.Image = Properties.Resources.HIRAYA__ready_to_print_;
+            pictureBox19.Location = new Point(0, 0);
+            pictureBox19.Name = "pictureBox19";
+            pictureBox19.Size = new Size(112, 126);
+            pictureBox19.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox19.TabIndex = 9;
+            pictureBox19.TabStop = false;
+            // 
+            // panel22
+            // 
+            panel22.Controls.Add(label37);
+            panel22.Controls.Add(label38);
+            panel22.Controls.Add(pictureBox20);
+            panel22.Location = new Point(377, 3);
+            panel22.Name = "panel22";
+            panel22.Size = new Size(118, 160);
+            panel22.TabIndex = 18;
+            // 
+            // label37
+            // 
+            label37.AutoSize = true;
+            label37.Location = new Point(22, 129);
+            label37.Name = "label37";
+            label37.Size = new Size(70, 15);
+            label37.TabIndex = 16;
+            label37.Text = "Artist Name";
+            // 
+            // label38
+            // 
+            label38.AutoSize = true;
+            label38.Location = new Point(51, 164);
+            label38.Name = "label38";
+            label38.Size = new Size(40, 15);
+            label38.TabIndex = 13;
+            label38.Text = "Home";
+            // 
+            // pictureBox20
+            // 
+            pictureBox20.Image = Properties.Resources.eyy_20240211103712;
+            pictureBox20.Location = new Point(0, 0);
+            pictureBox20.Name = "pictureBox20";
+            pictureBox20.Size = new Size(116, 126);
+            pictureBox20.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox20.TabIndex = 9;
+            pictureBox20.TabStop = false;
             // 
             // label14
             // 
@@ -791,48 +968,6 @@
             flowLayoutPanel3.Size = new Size(506, 174);
             flowLayoutPanel3.TabIndex = 20;
             // 
-            // pictureBox8
-            // 
-            pictureBox8.BackgroundImage = Properties.Resources._2;
-            pictureBox8.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox8.Image = Properties.Resources._2;
-            pictureBox8.Location = new Point(317, 25);
-            pictureBox8.Name = "pictureBox8";
-            pictureBox8.Size = new Size(222, 245);
-            pictureBox8.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox8.TabIndex = 18;
-            pictureBox8.TabStop = false;
-            // 
-            // panel10
-            // 
-            panel10.Controls.Add(Welcome);
-            panel10.Controls.Add(label8);
-            panel10.Location = new Point(44, 25);
-            panel10.Name = "panel10";
-            panel10.Size = new Size(250, 245);
-            panel10.TabIndex = 19;
-            panel10.Paint += panel10_Paint;
-            // 
-            // Welcome
-            // 
-            Welcome.BackColor = Color.MediumAquamarine;
-            Welcome.Cursor = Cursors.Hand;
-            Welcome.Location = new Point(72, 188);
-            Welcome.Name = "Welcome";
-            Welcome.Size = new Size(107, 23);
-            Welcome.TabIndex = 1;
-            Welcome.Text = "Explore LAMP ->";
-            Welcome.UseVisualStyleBackColor = false;
-            // 
-            // label8
-            // 
-            label8.Font = new Font("Lucida Calligraphy", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            label8.Location = new Point(33, 58);
-            label8.Name = "label8";
-            label8.Size = new Size(204, 91);
-            label8.TabIndex = 0;
-            label8.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
-            // 
             // panel5
             // 
             panel5.Controls.Add(label16);
@@ -843,6 +978,25 @@
             panel5.Name = "panel5";
             panel5.Size = new Size(122, 160);
             panel5.TabIndex = 15;
+            panel5.Paint += panel5_Paint;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new Point(30, 144);
+            label16.Name = "label16";
+            label16.Size = new Size(49, 15);
+            label16.TabIndex = 19;
+            label16.Text = "Art Title";
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new Point(19, 129);
+            label17.Name = "label17";
+            label17.Size = new Size(70, 15);
+            label17.TabIndex = 18;
+            label17.Text = "Artist Name";
             // 
             // label15
             // 
@@ -862,6 +1016,7 @@
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
             pictureBox2.TabIndex = 9;
             pictureBox2.TabStop = false;
+            pictureBox2.Click += pictureBox2_Click;
             // 
             // panel16
             // 
@@ -873,6 +1028,24 @@
             panel16.Name = "panel16";
             panel16.Size = new Size(122, 160);
             panel16.TabIndex = 16;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new Point(38, 145);
+            label18.Name = "label18";
+            label18.Size = new Size(49, 15);
+            label18.TabIndex = 17;
+            label18.Text = "Art Title";
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new Point(27, 130);
+            label19.Name = "label19";
+            label19.Size = new Size(70, 15);
+            label19.TabIndex = 16;
+            label19.Text = "Artist Name";
             // 
             // label20
             // 
@@ -952,6 +1125,24 @@
             panel18.Size = new Size(118, 160);
             panel18.TabIndex = 18;
             // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new Point(33, 144);
+            label24.Name = "label24";
+            label24.Size = new Size(49, 15);
+            label24.TabIndex = 17;
+            label24.Text = "Art Title";
+            // 
+            // label25
+            // 
+            label25.AutoSize = true;
+            label25.Location = new Point(22, 129);
+            label25.Name = "label25";
+            label25.Size = new Size(70, 15);
+            label25.TabIndex = 16;
+            label25.Text = "Artist Name";
+            // 
             // label26
             // 
             label26.AutoSize = true;
@@ -971,222 +1162,47 @@
             pictureBox9.TabIndex = 9;
             pictureBox9.TabStop = false;
             // 
-            // label18
+            // pictureBox8
             // 
-            label18.AutoSize = true;
-            label18.Location = new Point(38, 145);
-            label18.Name = "label18";
-            label18.Size = new Size(49, 15);
-            label18.TabIndex = 17;
-            label18.Text = "Art Title";
+            pictureBox8.BackgroundImage = Properties.Resources._2;
+            pictureBox8.BackgroundImageLayout = ImageLayout.Stretch;
+            pictureBox8.Image = Properties.Resources._2;
+            pictureBox8.Location = new Point(317, 25);
+            pictureBox8.Name = "pictureBox8";
+            pictureBox8.Size = new Size(222, 245);
+            pictureBox8.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox8.TabIndex = 18;
+            pictureBox8.TabStop = false;
             // 
-            // label19
+            // panel10
             // 
-            label19.AutoSize = true;
-            label19.Location = new Point(27, 130);
-            label19.Name = "label19";
-            label19.Size = new Size(70, 15);
-            label19.TabIndex = 16;
-            label19.Text = "Artist Name";
+            panel10.Controls.Add(Welcome);
+            panel10.Controls.Add(label8);
+            panel10.Location = new Point(44, 25);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(250, 245);
+            panel10.TabIndex = 19;
+            panel10.Paint += panel10_Paint;
             // 
-            // label16
+            // Welcome
             // 
-            label16.AutoSize = true;
-            label16.Location = new Point(30, 144);
-            label16.Name = "label16";
-            label16.Size = new Size(49, 15);
-            label16.TabIndex = 19;
-            label16.Text = "Art Title";
+            Welcome.BackColor = Color.MediumAquamarine;
+            Welcome.Cursor = Cursors.Hand;
+            Welcome.Location = new Point(72, 188);
+            Welcome.Name = "Welcome";
+            Welcome.Size = new Size(107, 23);
+            Welcome.TabIndex = 1;
+            Welcome.Text = "Explore LAMP ->";
+            Welcome.UseVisualStyleBackColor = false;
             // 
-            // label17
+            // label8
             // 
-            label17.AutoSize = true;
-            label17.Location = new Point(19, 129);
-            label17.Name = "label17";
-            label17.Size = new Size(70, 15);
-            label17.TabIndex = 18;
-            label17.Text = "Artist Name";
-            // 
-            // label24
-            // 
-            label24.AutoSize = true;
-            label24.Location = new Point(33, 144);
-            label24.Name = "label24";
-            label24.Size = new Size(49, 15);
-            label24.TabIndex = 17;
-            label24.Text = "Art Title";
-            // 
-            // label25
-            // 
-            label25.AutoSize = true;
-            label25.Location = new Point(22, 129);
-            label25.Name = "label25";
-            label25.Size = new Size(70, 15);
-            label25.TabIndex = 16;
-            label25.Text = "Artist Name";
-            // 
-            // flowLayoutPanel6
-            // 
-            flowLayoutPanel6.Controls.Add(panel19);
-            flowLayoutPanel6.Controls.Add(panel20);
-            flowLayoutPanel6.Controls.Add(panel21);
-            flowLayoutPanel6.Controls.Add(panel22);
-            flowLayoutPanel6.Location = new Point(44, 959);
-            flowLayoutPanel6.Name = "flowLayoutPanel6";
-            flowLayoutPanel6.Size = new Size(506, 174);
-            flowLayoutPanel6.TabIndex = 24;
-            // 
-            // panel19
-            // 
-            panel19.Controls.Add(label28);
-            panel19.Controls.Add(label29);
-            panel19.Controls.Add(pictureBox17);
-            panel19.Location = new Point(3, 3);
-            panel19.Name = "panel19";
-            panel19.Size = new Size(122, 160);
-            panel19.TabIndex = 15;
-            // 
-            // label28
-            // 
-            label28.AutoSize = true;
-            label28.Location = new Point(19, 129);
-            label28.Name = "label28";
-            label28.Size = new Size(70, 15);
-            label28.TabIndex = 18;
-            label28.Text = "Artist Name";
-            // 
-            // label29
-            // 
-            label29.AutoSize = true;
-            label29.Location = new Point(51, 164);
-            label29.Name = "label29";
-            label29.Size = new Size(40, 15);
-            label29.TabIndex = 13;
-            label29.Text = "Home";
-            // 
-            // pictureBox17
-            // 
-            pictureBox17.Image = Properties.Resources.Go_on_an_adventure;
-            pictureBox17.Location = new Point(0, 0);
-            pictureBox17.Name = "pictureBox17";
-            pictureBox17.Size = new Size(122, 127);
-            pictureBox17.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox17.TabIndex = 9;
-            pictureBox17.TabStop = false;
-            // 
-            // panel20
-            // 
-            panel20.Controls.Add(label31);
-            panel20.Controls.Add(label32);
-            panel20.Controls.Add(pictureBox18);
-            panel20.Location = new Point(131, 3);
-            panel20.Name = "panel20";
-            panel20.Size = new Size(122, 160);
-            panel20.TabIndex = 16;
-            // 
-            // label31
-            // 
-            label31.AutoSize = true;
-            label31.Location = new Point(27, 130);
-            label31.Name = "label31";
-            label31.Size = new Size(70, 15);
-            label31.TabIndex = 16;
-            label31.Text = "Artist Name";
-            // 
-            // label32
-            // 
-            label32.AutoSize = true;
-            label32.Location = new Point(51, 164);
-            label32.Name = "label32";
-            label32.Size = new Size(40, 15);
-            label32.TabIndex = 13;
-            label32.Text = "Home";
-            // 
-            // pictureBox18
-            // 
-            pictureBox18.Image = Properties.Resources.Go_on_an_adventure__1_1;
-            pictureBox18.Location = new Point(0, 0);
-            pictureBox18.Name = "pictureBox18";
-            pictureBox18.Size = new Size(122, 127);
-            pictureBox18.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox18.TabIndex = 9;
-            pictureBox18.TabStop = false;
-            // 
-            // panel21
-            // 
-            panel21.Controls.Add(label34);
-            panel21.Controls.Add(label35);
-            panel21.Controls.Add(pictureBox19);
-            panel21.Location = new Point(259, 3);
-            panel21.Name = "panel21";
-            panel21.Size = new Size(112, 160);
-            panel21.TabIndex = 17;
-            // 
-            // label34
-            // 
-            label34.AutoSize = true;
-            label34.Location = new Point(21, 129);
-            label34.Name = "label34";
-            label34.Size = new Size(70, 15);
-            label34.TabIndex = 14;
-            label34.Text = "Artist Name";
-            // 
-            // label35
-            // 
-            label35.AutoSize = true;
-            label35.Location = new Point(51, 164);
-            label35.Name = "label35";
-            label35.Size = new Size(40, 15);
-            label35.TabIndex = 13;
-            label35.Text = "Home";
-            // 
-            // pictureBox19
-            // 
-            pictureBox19.Image = Properties.Resources.HIRAYA__ready_to_print_;
-            pictureBox19.Location = new Point(0, 0);
-            pictureBox19.Name = "pictureBox19";
-            pictureBox19.Size = new Size(112, 126);
-            pictureBox19.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox19.TabIndex = 9;
-            pictureBox19.TabStop = false;
-            // 
-            // panel22
-            // 
-            panel22.Controls.Add(label37);
-            panel22.Controls.Add(label38);
-            panel22.Controls.Add(pictureBox20);
-            panel22.Location = new Point(377, 3);
-            panel22.Name = "panel22";
-            panel22.Size = new Size(118, 160);
-            panel22.TabIndex = 18;
-            // 
-            // label37
-            // 
-            label37.AutoSize = true;
-            label37.Location = new Point(22, 129);
-            label37.Name = "label37";
-            label37.Size = new Size(70, 15);
-            label37.TabIndex = 16;
-            label37.Text = "Artist Name";
-            // 
-            // label38
-            // 
-            label38.AutoSize = true;
-            label38.Location = new Point(51, 164);
-            label38.Name = "label38";
-            label38.Size = new Size(40, 15);
-            label38.TabIndex = 13;
-            label38.Text = "Home";
-            // 
-            // pictureBox20
-            // 
-            pictureBox20.Image = Properties.Resources.eyy_20240211103712;
-            pictureBox20.Location = new Point(0, 0);
-            pictureBox20.Name = "pictureBox20";
-            pictureBox20.Size = new Size(116, 126);
-            pictureBox20.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox20.TabIndex = 9;
-            pictureBox20.TabStop = false;
+            label8.Font = new Font("Lucida Calligraphy", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            label8.Location = new Point(33, 58);
+            label8.Name = "label8";
+            label8.Size = new Size(204, 91);
+            label8.TabIndex = 0;
+            label8.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
             // 
             // Homepage
             // 
@@ -1222,6 +1238,19 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox7).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
+            flowLayoutPanel6.ResumeLayout(false);
+            panel19.ResumeLayout(false);
+            panel19.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox17).EndInit();
+            panel20.ResumeLayout(false);
+            panel20.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox18).EndInit();
+            panel21.ResumeLayout(false);
+            panel21.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox19).EndInit();
+            panel22.ResumeLayout(false);
+            panel22.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox20).EndInit();
             flowLayoutPanel4.ResumeLayout(false);
             panel4.ResumeLayout(false);
             panel3.ResumeLayout(false);
@@ -1244,8 +1273,6 @@
             panel15.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox16).EndInit();
             flowLayoutPanel3.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
-            panel10.ResumeLayout(false);
             panel5.ResumeLayout(false);
             panel5.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
@@ -1258,19 +1285,8 @@
             panel18.ResumeLayout(false);
             panel18.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox9).EndInit();
-            flowLayoutPanel6.ResumeLayout(false);
-            panel19.ResumeLayout(false);
-            panel19.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox17).EndInit();
-            panel20.ResumeLayout(false);
-            panel20.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox18).EndInit();
-            panel21.ResumeLayout(false);
-            panel21.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox19).EndInit();
-            panel22.ResumeLayout(false);
-            panel22.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox20).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox8).EndInit();
+            panel10.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -1377,5 +1393,6 @@
         private Label label37;
         private Label label38;
         private PictureBox pictureBox20;
+        private Button button3;
     }
 }
