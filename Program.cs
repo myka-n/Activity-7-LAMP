@@ -1,3 +1,7 @@
+using System;
+using System.Windows.Forms;
+using MySql.Data.MySqlClient;
+
 namespace Activity_7
 {
     internal static class Program
@@ -8,10 +12,29 @@ namespace Activity_7
         [STAThread]
         static void Main()
         {
-            // To customize application configuration such as set high DPI settings or default font,
-            // see https://aka.ms/applicationconfiguration.
+            // Initialize application configuration
             ApplicationConfiguration.Initialize();
-            Application.Run(new Login());
+
+            // Define your MySQL connection string
+            string connectionString = "server=localhost;user id=root;password=mykz;database=zeereal_artspace;";
+
+            // Attempt to establish a connection to the MySQL database
+            try
+            {
+                using (MySqlConnection conn = new MySqlConnection(connectionString))
+                {
+                    conn.Open();
+                    MessageBox.Show("Database connection successful!", "Connection Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (MySqlException ex)
+            {
+                MessageBox.Show($"Database connection failed:\n{ex.Message}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return; // Exit the application if the connection fails
+            }
+
+            // Run the main application form
+            Application.Run(new Categories());
         }
     }
 }
