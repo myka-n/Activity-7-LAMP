@@ -49,15 +49,41 @@
             pictureBox2 = new PictureBox();
             pictureBox3 = new PictureBox();
             panel1 = new Panel();
-            panel3 = new Panel();
-            label1 = new Label();
-            label2 = new Label();
-            label3 = new Label();
-            flowLayoutPanel3 = new FlowLayoutPanel();
-            linkLabel6 = new LinkLabel();
-            linkLabel8 = new LinkLabel();
+            textBox2 = new TextBox();
+            tabControl1 = new TabControl();
+            myPosts = new TabPage();
+            panel5 = new Panel();
+            linkLabel14 = new LinkLabel();
+            panel6 = new Panel();
             linkLabel9 = new LinkLabel();
             linkLabel10 = new LinkLabel();
+            linkLabel12 = new LinkLabel();
+            label5 = new Label();
+            label7 = new Label();
+            pictureBox4 = new PictureBox();
+            pictureBox5 = new PictureBox();
+            label8 = new Label();
+            panel4 = new Panel();
+            linkLabel13 = new LinkLabel();
+            panel7 = new Panel();
+            linkLabel8 = new LinkLabel();
+            Comment = new LinkLabel();
+            linkLabel6 = new LinkLabel();
+            label4 = new Label();
+            label9 = new Label();
+            pictureBox6 = new PictureBox();
+            pictureBox12 = new PictureBox();
+            label6 = new Label();
+            activity = new TabPage();
+            label1 = new Label();
+            linkLabel11 = new LinkLabel();
+            label3 = new Label();
+            label2 = new Label();
+            openFileDialog1 = new OpenFileDialog();
+            postSettings = new ContextMenuStrip(components);
+            editToolStripMenuItem = new ToolStripMenuItem();
+            deleteToolStripMenuItem = new ToolStripMenuItem();
+            moveToArchiveToolStripMenuItem = new ToolStripMenuItem();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -66,7 +92,17 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
             ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
             panel1.SuspendLayout();
-            flowLayoutPanel3.SuspendLayout();
+            tabControl1.SuspendLayout();
+            myPosts.SuspendLayout();
+            panel5.SuspendLayout();
+            panel6.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).BeginInit();
+            panel4.SuspendLayout();
+            panel7.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox12).BeginInit();
+            postSettings.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
@@ -185,6 +221,7 @@
             linkLabel5.TabIndex = 5;
             linkLabel5.TabStop = true;
             linkLabel5.Text = "Profile";
+            linkLabel5.LinkClicked += linkLabel5_LinkClicked;
             // 
             // linkLabel7
             // 
@@ -248,7 +285,7 @@
             // pictureBox2
             // 
             pictureBox2.Image = Properties.Resources.download__1_;
-            pictureBox2.Location = new Point(14, 9);
+            pictureBox2.Location = new Point(14, 43);
             pictureBox2.Name = "pictureBox2";
             pictureBox2.Size = new Size(516, 138);
             pictureBox2.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -258,7 +295,7 @@
             // pictureBox3
             // 
             pictureBox3.Image = Properties.Resources.Untitled109_20230723190327;
-            pictureBox3.Location = new Point(14, 61);
+            pictureBox3.Location = new Point(14, 95);
             pictureBox3.Name = "pictureBox3";
             pictureBox3.Size = new Size(113, 113);
             pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
@@ -267,128 +304,362 @@
             // 
             // panel1
             // 
-            panel1.Controls.Add(flowLayoutPanel3);
+            panel1.AutoScroll = true;
+            panel1.Controls.Add(textBox2);
+            panel1.Controls.Add(tabControl1);
+            panel1.Controls.Add(label1);
+            panel1.Controls.Add(linkLabel11);
             panel1.Controls.Add(label3);
             panel1.Controls.Add(label2);
-            panel1.Controls.Add(panel3);
             panel1.Controls.Add(pictureBox3);
             panel1.Controls.Add(pictureBox2);
-            panel1.Location = new Point(31, 80);
+            panel1.Location = new Point(12, 34);
             panel1.Name = "panel1";
-            panel1.Size = new Size(538, 446);
+            panel1.Size = new Size(578, 568);
             panel1.TabIndex = 10;
             // 
-            // panel3
+            // textBox2
             // 
-            panel3.Location = new Point(17, 227);
-            panel3.Name = "panel3";
-            panel3.Size = new Size(500, 43);
-            panel3.TabIndex = 10;
-            panel3.Paint += panel3_Paint;
+            textBox2.Location = new Point(17, 256);
+            textBox2.Name = "textBox2";
+            textBox2.Size = new Size(511, 23);
+            textBox2.TabIndex = 16;
+            // 
+            // tabControl1
+            // 
+            tabControl1.Controls.Add(myPosts);
+            tabControl1.Controls.Add(activity);
+            tabControl1.Location = new Point(14, 323);
+            tabControl1.Name = "tabControl1";
+            tabControl1.SelectedIndex = 0;
+            tabControl1.Size = new Size(516, 1002);
+            tabControl1.TabIndex = 15;
+            // 
+            // myPosts
+            // 
+            myPosts.Controls.Add(panel5);
+            myPosts.Controls.Add(panel4);
+            myPosts.Location = new Point(4, 24);
+            myPosts.Name = "myPosts";
+            myPosts.Padding = new Padding(3);
+            myPosts.Size = new Size(508, 974);
+            myPosts.TabIndex = 0;
+            myPosts.Text = "My posts";
+            myPosts.UseVisualStyleBackColor = true;
+            myPosts.Click += tabPage1_Click;
+            // 
+            // panel5
+            // 
+            panel5.BorderStyle = BorderStyle.FixedSingle;
+            panel5.Controls.Add(linkLabel14);
+            panel5.Controls.Add(panel6);
+            panel5.Controls.Add(pictureBox5);
+            panel5.Controls.Add(label8);
+            panel5.Location = new Point(27, 503);
+            panel5.Name = "panel5";
+            panel5.Size = new Size(437, 435);
+            panel5.TabIndex = 19;
+            // 
+            // linkLabel14
+            // 
+            linkLabel14.AutoSize = true;
+            linkLabel14.Font = new Font("Segoe UI", 14.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            linkLabel14.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabel14.LinkColor = Color.Black;
+            linkLabel14.Location = new Point(405, -1);
+            linkLabel14.Name = "linkLabel14";
+            linkLabel14.Size = new Size(27, 25);
+            linkLabel14.TabIndex = 19;
+            linkLabel14.TabStop = true;
+            linkLabel14.Text = "...";
+            linkLabel14.LinkClicked += linkLabel14_LinkClicked;
+            // 
+            // panel6
+            // 
+            panel6.Controls.Add(linkLabel9);
+            panel6.Controls.Add(linkLabel10);
+            panel6.Controls.Add(linkLabel12);
+            panel6.Controls.Add(label5);
+            panel6.Controls.Add(label7);
+            panel6.Controls.Add(pictureBox4);
+            panel6.Location = new Point(23, 31);
+            panel6.Name = "panel6";
+            panel6.Size = new Size(389, 375);
+            panel6.TabIndex = 17;
+            // 
+            // linkLabel9
+            // 
+            linkLabel9.AutoSize = true;
+            linkLabel9.Location = new Point(171, 353);
+            linkLabel9.Name = "linkLabel9";
+            linkLabel9.Size = new Size(30, 15);
+            linkLabel9.TabIndex = 19;
+            linkLabel9.TabStop = true;
+            linkLabel9.Text = "Rate";
+            // 
+            // linkLabel10
+            // 
+            linkLabel10.AutoSize = true;
+            linkLabel10.Location = new Point(85, 353);
+            linkLabel10.Name = "linkLabel10";
+            linkLabel10.Size = new Size(66, 15);
+            linkLabel10.TabIndex = 18;
+            linkLabel10.TabStop = true;
+            linkLabel10.Text = "linkLabel10";
+            // 
+            // linkLabel12
+            // 
+            linkLabel12.AutoSize = true;
+            linkLabel12.Location = new Point(24, 353);
+            linkLabel12.Name = "linkLabel12";
+            linkLabel12.Size = new Size(28, 15);
+            linkLabel12.TabIndex = 17;
+            linkLabel12.TabStop = true;
+            linkLabel12.Text = "Like";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new Point(19, 16);
+            label5.Name = "label5";
+            label5.Size = new Size(43, 15);
+            label5.TabIndex = 16;
+            label5.Text = "Surreal";
+            // 
+            // label7
+            // 
+            label7.Location = new Point(25, 52);
+            label7.Name = "label7";
+            label7.Size = new Size(225, 66);
+            label7.TabIndex = 14;
+            label7.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
+            // 
+            // pictureBox4
+            // 
+            pictureBox4.Image = Properties.Resources.Go_on_an_adventure;
+            pictureBox4.Location = new Point(25, 121);
+            pictureBox4.Name = "pictureBox4";
+            pictureBox4.Size = new Size(280, 208);
+            pictureBox4.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox4.TabIndex = 9;
+            pictureBox4.TabStop = false;
+            // 
+            // pictureBox5
+            // 
+            pictureBox5.Image = Properties.Resources.Untitled58_20221225121714;
+            pictureBox5.Location = new Point(23, 3);
+            pictureBox5.Name = "pictureBox5";
+            pictureBox5.Size = new Size(32, 22);
+            pictureBox5.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox5.TabIndex = 15;
+            pictureBox5.TabStop = false;
+            // 
+            // label8
+            // 
+            label8.AutoSize = true;
+            label8.Location = new Point(61, 3);
+            label8.Name = "label8";
+            label8.Size = new Size(50, 15);
+            label8.TabIndex = 13;
+            label8.Text = "Zee Arts";
+            // 
+            // panel4
+            // 
+            panel4.BorderStyle = BorderStyle.FixedSingle;
+            panel4.Controls.Add(linkLabel13);
+            panel4.Controls.Add(panel7);
+            panel4.Controls.Add(pictureBox12);
+            panel4.Controls.Add(label6);
+            panel4.Location = new Point(27, 37);
+            panel4.Name = "panel4";
+            panel4.Size = new Size(437, 435);
+            panel4.TabIndex = 18;
+            // 
+            // linkLabel13
+            // 
+            linkLabel13.AutoSize = true;
+            linkLabel13.Font = new Font("Segoe UI", 15.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            linkLabel13.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabel13.LinkColor = Color.Black;
+            linkLabel13.Location = new Point(405, -5);
+            linkLabel13.Name = "linkLabel13";
+            linkLabel13.Size = new Size(31, 30);
+            linkLabel13.TabIndex = 18;
+            linkLabel13.TabStop = true;
+            linkLabel13.Text = "...";
+            // 
+            // panel7
+            // 
+            panel7.Controls.Add(linkLabel8);
+            panel7.Controls.Add(Comment);
+            panel7.Controls.Add(linkLabel6);
+            panel7.Controls.Add(label4);
+            panel7.Controls.Add(label9);
+            panel7.Controls.Add(pictureBox6);
+            panel7.Location = new Point(23, 31);
+            panel7.Name = "panel7";
+            panel7.Size = new Size(389, 375);
+            panel7.TabIndex = 17;
+            // 
+            // linkLabel8
+            // 
+            linkLabel8.AutoSize = true;
+            linkLabel8.Location = new Point(171, 353);
+            linkLabel8.Name = "linkLabel8";
+            linkLabel8.Size = new Size(30, 15);
+            linkLabel8.TabIndex = 19;
+            linkLabel8.TabStop = true;
+            linkLabel8.Text = "Rate";
+            // 
+            // Comment
+            // 
+            Comment.AutoSize = true;
+            Comment.Location = new Point(85, 353);
+            Comment.Name = "Comment";
+            Comment.Size = new Size(61, 15);
+            Comment.TabIndex = 18;
+            Comment.TabStop = true;
+            Comment.Text = "Comment";
+            // 
+            // linkLabel6
+            // 
+            linkLabel6.AutoSize = true;
+            linkLabel6.Location = new Point(24, 353);
+            linkLabel6.Name = "linkLabel6";
+            linkLabel6.Size = new Size(28, 15);
+            linkLabel6.TabIndex = 17;
+            linkLabel6.TabStop = true;
+            linkLabel6.Text = "Like";
+            // 
+            // label4
+            // 
+            label4.AutoSize = true;
+            label4.Location = new Point(19, 16);
+            label4.Name = "label4";
+            label4.Size = new Size(43, 15);
+            label4.TabIndex = 16;
+            label4.Text = "Surreal";
+            // 
+            // label9
+            // 
+            label9.Location = new Point(25, 52);
+            label9.Name = "label9";
+            label9.Size = new Size(225, 66);
+            label9.TabIndex = 14;
+            label9.Text = "     \"In the heart of darkness, even a single LAMP can light the way. Let your art shine — this is your sanctuary, your stage, your spark.\"";
+            // 
+            // pictureBox6
+            // 
+            pictureBox6.Image = Properties.Resources.Go_on_an_adventure;
+            pictureBox6.Location = new Point(25, 121);
+            pictureBox6.Name = "pictureBox6";
+            pictureBox6.Size = new Size(280, 208);
+            pictureBox6.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox6.TabIndex = 9;
+            pictureBox6.TabStop = false;
+            // 
+            // pictureBox12
+            // 
+            pictureBox12.Image = Properties.Resources.Untitled58_20221225121714;
+            pictureBox12.Location = new Point(23, 3);
+            pictureBox12.Name = "pictureBox12";
+            pictureBox12.Size = new Size(32, 22);
+            pictureBox12.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox12.TabIndex = 15;
+            pictureBox12.TabStop = false;
+            // 
+            // label6
+            // 
+            label6.AutoSize = true;
+            label6.Location = new Point(61, 3);
+            label6.Name = "label6";
+            label6.Size = new Size(50, 15);
+            label6.TabIndex = 13;
+            label6.Text = "Zee Arts";
+            // 
+            // activity
+            // 
+            activity.Location = new Point(4, 24);
+            activity.Name = "activity";
+            activity.Padding = new Padding(3);
+            activity.Size = new Size(508, 974);
+            activity.TabIndex = 1;
+            activity.Text = "Activity";
+            activity.UseVisualStyleBackColor = true;
+            activity.Click += tabPage2_Click;
             // 
             // label1
             // 
             label1.AutoSize = true;
-            label1.Location = new Point(31, 53);
+            label1.Location = new Point(14, 15);
             label1.Name = "label1";
             label1.Size = new Size(72, 15);
             label1.TabIndex = 11;
             label1.Text = "My Account";
+            label1.Click += label1_Click;
             // 
-            // label2
+            // linkLabel11
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(14, 177);
-            label2.Name = "label2";
-            label2.Size = new Size(60, 15);
-            label2.TabIndex = 12;
-            label2.Text = "Username";
+            linkLabel11.AutoSize = true;
+            linkLabel11.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabel11.Location = new Point(16, 294);
+            linkLabel11.Name = "linkLabel11";
+            linkLabel11.Size = new Size(67, 15);
+            linkLabel11.TabIndex = 14;
+            linkLabel11.TabStop = true;
+            linkLabel11.Text = "Edit Profile ";
             // 
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new Point(17, 209);
+            label3.Location = new Point(14, 235);
             label3.Name = "label3";
             label3.Size = new Size(60, 15);
             label3.TabIndex = 13;
             label3.Text = "About me";
             // 
-            // flowLayoutPanel3
+            // label2
             // 
-            flowLayoutPanel3.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel3.BackColor = Color.Transparent;
-            flowLayoutPanel3.Controls.Add(linkLabel6);
-            flowLayoutPanel3.Controls.Add(linkLabel8);
-            flowLayoutPanel3.Controls.Add(linkLabel9);
-            flowLayoutPanel3.Controls.Add(linkLabel10);
-            flowLayoutPanel3.Location = new Point(20, 289);
-            flowLayoutPanel3.Name = "flowLayoutPanel3";
-            flowLayoutPanel3.Size = new Size(497, 27);
-            flowLayoutPanel3.TabIndex = 5;
+            label2.AutoSize = true;
+            label2.Location = new Point(14, 211);
+            label2.Name = "label2";
+            label2.Size = new Size(60, 15);
+            label2.TabIndex = 12;
+            label2.Text = "Username";
             // 
-            // linkLabel6
+            // openFileDialog1
             // 
-            linkLabel6.AutoSize = true;
-            linkLabel6.Dock = DockStyle.Top;
-            linkLabel6.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel6.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel6.LinkColor = Color.Black;
-            linkLabel6.Location = new Point(3, 0);
-            linkLabel6.Name = "linkLabel6";
-            linkLabel6.Size = new Size(45, 17);
-            linkLabel6.TabIndex = 1;
-            linkLabel6.TabStop = true;
-            linkLabel6.Text = "Profile";
-            linkLabel6.LinkClicked += linkLabel6_LinkClicked;
+            openFileDialog1.FileName = "openFileDialog1";
             // 
-            // linkLabel8
+            // postSettings
             // 
-            linkLabel8.AutoSize = true;
-            linkLabel8.Dock = DockStyle.Top;
-            linkLabel8.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel8.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel8.LinkColor = Color.Black;
-            linkLabel8.Location = new Point(54, 0);
-            linkLabel8.Name = "linkLabel8";
-            linkLabel8.Size = new Size(73, 17);
-            linkLabel8.TabIndex = 2;
-            linkLabel8.TabStop = true;
-            linkLabel8.Text = "Liked Posts";
+            postSettings.Items.AddRange(new ToolStripItem[] { editToolStripMenuItem, deleteToolStripMenuItem, moveToArchiveToolStripMenuItem });
+            postSettings.Name = "postSettings";
+            postSettings.Size = new Size(160, 70);
             // 
-            // linkLabel9
+            // editToolStripMenuItem
             // 
-            linkLabel9.AutoSize = true;
-            linkLabel9.Dock = DockStyle.Top;
-            linkLabel9.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel9.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel9.LinkColor = Color.Black;
-            linkLabel9.Location = new Point(133, 0);
-            linkLabel9.Name = "linkLabel9";
-            linkLabel9.Size = new Size(109, 17);
-            linkLabel9.TabIndex = 3;
-            linkLabel9.TabStop = true;
-            linkLabel9.Text = "Comment History";
+            editToolStripMenuItem.Name = "editToolStripMenuItem";
+            editToolStripMenuItem.Size = new Size(159, 22);
+            editToolStripMenuItem.Text = "Edit";
             // 
-            // linkLabel10
+            // deleteToolStripMenuItem
             // 
-            linkLabel10.AutoSize = true;
-            linkLabel10.Dock = DockStyle.Top;
-            linkLabel10.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel10.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel10.LinkColor = Color.Black;
-            linkLabel10.Location = new Point(248, 0);
-            linkLabel10.Name = "linkLabel10";
-            linkLabel10.Size = new Size(62, 17);
-            linkLabel10.TabIndex = 4;
-            linkLabel10.TabStop = true;
-            linkLabel10.Text = "My posts";
+            deleteToolStripMenuItem.Name = "deleteToolStripMenuItem";
+            deleteToolStripMenuItem.Size = new Size(159, 22);
+            deleteToolStripMenuItem.Text = "Delete";
+            // 
+            // moveToArchiveToolStripMenuItem
+            // 
+            moveToArchiveToolStripMenuItem.Name = "moveToArchiveToolStripMenuItem";
+            moveToArchiveToolStripMenuItem.Size = new Size(159, 22);
+            moveToArchiveToolStripMenuItem.Text = "Move to archive";
             // 
             // myAccount
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(602, 749);
-            Controls.Add(label1);
             Controls.Add(panel1);
             Controls.Add(panel2);
             Name = "myAccount";
@@ -404,10 +675,22 @@
             ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
-            flowLayoutPanel3.ResumeLayout(false);
-            flowLayoutPanel3.PerformLayout();
+            tabControl1.ResumeLayout(false);
+            myPosts.ResumeLayout(false);
+            panel5.ResumeLayout(false);
+            panel5.PerformLayout();
+            panel6.ResumeLayout(false);
+            panel6.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox4).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox5).EndInit();
+            panel4.ResumeLayout(false);
+            panel4.PerformLayout();
+            panel7.ResumeLayout(false);
+            panel7.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox6).EndInit();
+            ((System.ComponentModel.ISupportInitialize)pictureBox12).EndInit();
+            postSettings.ResumeLayout(false);
             ResumeLayout(false);
-            PerformLayout();
         }
 
         #endregion
@@ -432,14 +715,40 @@
         private PictureBox pictureBox2;
         private PictureBox pictureBox3;
         private Panel panel1;
-        private Panel panel3;
         private Label label1;
         private Label label3;
         private Label label2;
-        private FlowLayoutPanel flowLayoutPanel3;
-        private LinkLabel linkLabel6;
+        private LinkLabel linkLabel11;
+        private OpenFileDialog openFileDialog1;
+        private TabControl tabControl1;
+        private TabPage myPosts;
+        private TabPage activity;
+        private Panel panel7;
         private LinkLabel linkLabel8;
+        private LinkLabel Comment;
+        private LinkLabel linkLabel6;
+        private Label label4;
+        private Label label9;
+        private PictureBox pictureBox6;
+        private PictureBox pictureBox12;
+        private Label label6;
+        private Panel panel4;
+        private Panel panel5;
+        private Panel panel6;
         private LinkLabel linkLabel9;
         private LinkLabel linkLabel10;
+        private LinkLabel linkLabel12;
+        private Label label5;
+        private Label label7;
+        private PictureBox pictureBox4;
+        private PictureBox pictureBox5;
+        private Label label8;
+        private TextBox textBox2;
+        private LinkLabel linkLabel13;
+        private ContextMenuStrip postSettings;
+        private ToolStripMenuItem editToolStripMenuItem;
+        private ToolStripMenuItem deleteToolStripMenuItem;
+        private ToolStripMenuItem moveToArchiveToolStripMenuItem;
+        private LinkLabel linkLabel14;
     }
 }

@@ -44,9 +44,7 @@
             linkLabel7 = new LinkLabel();
             textBox1 = new TextBox();
             ProfileMenuStrip = new ContextMenuStrip(components);
-            myAccountToolStripMenuItem = new ToolStripMenuItem();
-            likesToolStripMenuItem = new ToolStripMenuItem();
-            commentsToolStripMenuItem = new ToolStripMenuItem();
+            MyAccountToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             logoutToolStripMenuItem = new ToolStripMenuItem();
             label1 = new Label();
@@ -345,30 +343,16 @@
             // 
             // ProfileMenuStrip
             // 
-            ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, likesToolStripMenuItem, commentsToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
+            ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { MyAccountToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
             ProfileMenuStrip.Name = "contextMenuStrip1";
-            ProfileMenuStrip.Size = new Size(181, 136);
+            ProfileMenuStrip.Size = new Size(181, 92);
             // 
             // myAccountToolStripMenuItem
             // 
-            myAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
-            myAccountToolStripMenuItem.Size = new Size(180, 22);
-            myAccountToolStripMenuItem.Text = "My Account";
-            myAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
-            // 
-            // likesToolStripMenuItem
-            // 
-            likesToolStripMenuItem.Name = "likesToolStripMenuItem";
-            likesToolStripMenuItem.Size = new Size(180, 22);
-            likesToolStripMenuItem.Text = "Likes";
-            likesToolStripMenuItem.Click += likesToolStripMenuItem_Click;
-            // 
-            // commentsToolStripMenuItem
-            // 
-            commentsToolStripMenuItem.Name = "commentsToolStripMenuItem";
-            commentsToolStripMenuItem.Size = new Size(180, 22);
-            commentsToolStripMenuItem.Text = "Comments";
-            commentsToolStripMenuItem.Click += commentsToolStripMenuItem_Click;
+            MyAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
+            MyAccountToolStripMenuItem.Size = new Size(180, 22);
+            MyAccountToolStripMenuItem.Text = "My Account";
+            MyAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
             // 
             // settingsToolStripMenuItem
             // 
@@ -1310,8 +1294,6 @@
         private LinkLabel linkLabel5;
         private ContextMenuStrip ProfileMenuStrip;
         private ToolStripMenuItem myAccountToolStripMenuItem;
-        private ToolStripMenuItem likesToolStripMenuItem;
-        private ToolStripMenuItem commentsToolStripMenuItem;
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem logoutToolStripMenuItem;
         private Label label1;
@@ -1399,5 +1381,7 @@
         private Label label38;
         private PictureBox pictureBox20;
         private Button button3;
+
+        public ToolStripMenuItem MyAccountToolStripMenuItem { get => myAccountToolStripMenuItem; set => myAccountToolStripMenuItem = value; }
     }
 }
