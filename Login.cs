@@ -8,6 +8,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
+using MySql.Data.MySqlClient;
+
 
 namespace Activity_7
 {
@@ -60,10 +62,56 @@ namespace Activity_7
 
         private void button1_Click(object sender, EventArgs e)
         {
-            this.Hide();
-            Homepage homepageForm = new Homepage();
-            homepageForm.ShowDialog();
+            // Database connection
+            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT user_id, username, email, password, profile_pic, bio FROM users WHERE email = @Email";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Email", textBox1.Text); // Email textbox
+                    MySqlDataReader reader = cmd.ExecuteReader();
+
+                    if (reader.Read())
+                    {
+                        string dbPassword = reader["password"].ToString();
+
+                        // Assuming you are storing passwords securely (hash them in real-world scenarios)
+                        if (textBox2.Text == dbPassword) // Password textbox
+                        {
+                            // ⭐ SET THE SESSION VALUES
+                            Session.UserId = Convert.ToInt32(reader["user_id"]);
+                            Session.Username = reader["username"].ToString();
+                            Session.Email = reader["email"].ToString();
+                            Session.ProfilePicPath = reader["profile_pic"] != DBNull.Value ? reader["profile_pic"].ToString() : "";
+                            Session.Bio = reader["bio"].ToString();
+
+                            // Successful login
+                            MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            this.Hide(); // Hide login form
+                            Homepage homepageForm = new Homepage();
+                            homepageForm.ShowDialog();
+                        }
+                        else
+                        {
+                            MessageBox.Show("Incorrect password.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        }
+                    }
+                    else
+                    {
+                        MessageBox.Show("Email not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
+
+
 
         private void label1_Click(object sender, EventArgs e)
         {
@@ -94,6 +142,11 @@ namespace Activity_7
             button2.ForeColor = Color.Black; // or White
             button2.Font = new Font("Arial", 10, FontStyle.Bold);
 
+
+        }
+
+        private void Login_Load(object sender, EventArgs e)
+        {
 
         }
     }

@@ -34,7 +34,7 @@ namespace Activity_7
             }
 
             // Run the main application form
-            Application.Run(new Categories());
+            Application.Run(new Login());
         }
     }
 }

@@ -71,5 +71,25 @@ namespace Activity_7
         {
             ProfileMenuStrip.Show(linkLabel5, new Point(0, linkLabel5.Height));
         }
+
+        private void myAccount_Load(object sender, EventArgs e)
+        {
+            username.Text = Session.Username;
+            bio.Text = Session.Bio;  
+
+            if (!string.IsNullOrEmpty(Session.ProfilePicPath))
+            {
+                try
+                {
+                    profilepic.ImageLocation = Session.ProfilePicPath;
+                    profilepic.SizeMode = PictureBoxSizeMode.StretchImage;
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error loading profile picture: " + ex.Message);
+                }
+            }
+        }
+
     }
 }

@@ -47,7 +47,7 @@
             settingsToolStripMenuItem = new ToolStripMenuItem();
             logoutToolStripMenuItem = new ToolStripMenuItem();
             pictureBox2 = new PictureBox();
-            pictureBox3 = new PictureBox();
+            profilepic = new PictureBox();
             panel1 = new Panel();
             textBox2 = new TextBox();
             tabControl1 = new TabControl();
@@ -77,8 +77,8 @@
             activity = new TabPage();
             label1 = new Label();
             linkLabel11 = new LinkLabel();
-            label3 = new Label();
-            label2 = new Label();
+            bio = new Label();
+            username = new Label();
             openFileDialog1 = new OpenFileDialog();
             postSettings = new ContextMenuStrip(components);
             editToolStripMenuItem = new ToolStripMenuItem();
@@ -90,7 +90,7 @@
             flowLayoutPanel2.SuspendLayout();
             ProfileMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox2).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)profilepic).BeginInit();
             panel1.SuspendLayout();
             tabControl1.SuspendLayout();
             myPosts.SuspendLayout();
@@ -292,15 +292,14 @@
             pictureBox2.TabIndex = 8;
             pictureBox2.TabStop = false;
             // 
-            // pictureBox3
+            // profilepic
             // 
-            pictureBox3.Image = Properties.Resources.Untitled109_20230723190327;
-            pictureBox3.Location = new Point(14, 95);
-            pictureBox3.Name = "pictureBox3";
-            pictureBox3.Size = new Size(113, 113);
-            pictureBox3.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox3.TabIndex = 9;
-            pictureBox3.TabStop = false;
+            profilepic.Location = new Point(14, 95);
+            profilepic.Name = "profilepic";
+            profilepic.Size = new Size(113, 113);
+            profilepic.SizeMode = PictureBoxSizeMode.StretchImage;
+            profilepic.TabIndex = 9;
+            profilepic.TabStop = false;
             // 
             // panel1
             // 
@@ -309,9 +308,9 @@
             panel1.Controls.Add(tabControl1);
             panel1.Controls.Add(label1);
             panel1.Controls.Add(linkLabel11);
-            panel1.Controls.Add(label3);
-            panel1.Controls.Add(label2);
-            panel1.Controls.Add(pictureBox3);
+            panel1.Controls.Add(bio);
+            panel1.Controls.Add(username);
+            panel1.Controls.Add(profilepic);
             panel1.Controls.Add(pictureBox2);
             panel1.Location = new Point(12, 34);
             panel1.Name = "panel1";
@@ -609,23 +608,23 @@
             linkLabel11.TabStop = true;
             linkLabel11.Text = "Edit Profile ";
             // 
-            // label3
+            // bio
             // 
-            label3.AutoSize = true;
-            label3.Location = new Point(14, 235);
-            label3.Name = "label3";
-            label3.Size = new Size(60, 15);
-            label3.TabIndex = 13;
-            label3.Text = "About me";
+            bio.AutoSize = true;
+            bio.Location = new Point(14, 235);
+            bio.Name = "bio";
+            bio.Size = new Size(60, 15);
+            bio.TabIndex = 13;
+            bio.Text = "About me";
             // 
-            // label2
+            // username
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(14, 211);
-            label2.Name = "label2";
-            label2.Size = new Size(60, 15);
-            label2.TabIndex = 12;
-            label2.Text = "Username";
+            username.AutoSize = true;
+            username.Location = new Point(14, 211);
+            username.Name = "username";
+            username.Size = new Size(60, 15);
+            username.TabIndex = 12;
+            username.Text = "Username";
             // 
             // openFileDialog1
             // 
@@ -664,6 +663,7 @@
             Controls.Add(panel2);
             Name = "myAccount";
             Text = "myAccount";
+            Load += myAccount_Load;
             panel2.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
@@ -672,7 +672,7 @@
             flowLayoutPanel2.PerformLayout();
             ProfileMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)pictureBox2).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox3).EndInit();
+            ((System.ComponentModel.ISupportInitialize)profilepic).EndInit();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             tabControl1.ResumeLayout(false);
@@ -713,11 +713,11 @@
         private ToolStripMenuItem settingsToolStripMenuItem;
         private ToolStripMenuItem logoutToolStripMenuItem;
         private PictureBox pictureBox2;
-        private PictureBox pictureBox3;
+        private PictureBox profilepic;
         private Panel panel1;
         private Label label1;
-        private Label label3;
-        private Label label2;
+        private Label bio;
+        private Label username;
         private LinkLabel linkLabel11;
         private OpenFileDialog openFileDialog1;
         private TabControl tabControl1;

@@ -34,8 +34,6 @@
             signupbutton = new Button();
             password = new TextBox();
             label2 = new Label();
-            full_name = new TextBox();
-            label1 = new Label();
             label5 = new Label();
             username = new TextBox();
             label6 = new Label();
@@ -102,23 +100,6 @@
             label2.TabIndex = 2;
             label2.Text = "Password";
             // 
-            // full_name
-            // 
-            full_name.Location = new Point(72, 94);
-            full_name.Name = "full_name";
-            full_name.Size = new Size(206, 23);
-            full_name.TabIndex = 1;
-            // 
-            // label1
-            // 
-            label1.AutoSize = true;
-            label1.Location = new Point(72, 76);
-            label1.Name = "label1";
-            label1.Size = new Size(61, 15);
-            label1.TabIndex = 0;
-            label1.Text = "Full Name";
-            label1.Click += label1_Click;
-            // 
             // label5
             // 
             label5.AutoSize = true;
@@ -176,9 +157,7 @@
             Controls.Add(label3);
             Controls.Add(backToLogIn);
             Controls.Add(label4);
-            Controls.Add(label1);
             Controls.Add(signupbutton);
-            Controls.Add(full_name);
             Controls.Add(password);
             Controls.Add(label2);
             Cursor = Cursors.Hand;
@@ -201,8 +180,6 @@
         private Button signupbutton;
         private TextBox password;
         private Label label2;
-        private TextBox full_name;
-        private Label label1;
         private Label label5;
         private TextBox username;
         private Label label6;

@@ -8,7 +8,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Drawing.Drawing2D;
+using MySql.Data.MySqlClient;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+
 
 namespace Activity_7
 {
@@ -58,14 +60,59 @@ namespace Activity_7
 
         private void button1_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("You successfully created an account!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            // Database connection
+            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
 
-            // Go back to Login form
-            this.Hide(); // Hide the Sign Up form
+                    // Check if email already exists
+                    string checkQuery = "SELECT COUNT(*) FROM users WHERE email = @Email";
+                    MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
+                    checkCmd.Parameters.AddWithValue("@Email", email.Text); // Email textbox
 
-            Login loginForm = new Login();
-            loginForm.Show();
+                    int emailExists = Convert.ToInt32(checkCmd.ExecuteScalar());
+                    if (emailExists > 0)
+                    {
+                        MessageBox.Show("Email already exists.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+
+                    // Insert the new user into the database
+                    string insertQuery = "INSERT INTO users (username, email, password) VALUES (@Username, @Email, @Password)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@Username", username.Text); // Username textbox
+                    insertCmd.Parameters.AddWithValue("@Email", email.Text); // Email textbox
+                    insertCmd.Parameters.AddWithValue("@Password", password.Text); // Password textbox
+
+                    insertCmd.ExecuteNonQuery();
+                    MessageBox.Show("Account created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    if (string.IsNullOrWhiteSpace(username.Text) ||
+                    string.IsNullOrWhiteSpace(email.Text) ||
+                    string.IsNullOrWhiteSpace(password.Text))
+                    {
+                        MessageBox.Show("Please fill in all fields!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return; // stop running the rest of the code
+                    }
+
+                    // If all fields are filled, continue
+                    MessageBox.Show("You successfully created an account!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                    // Redirect to Login form
+                    this.Hide();
+                    Login loginForm = new Login();
+                    loginForm.Show();
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
         }
+
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

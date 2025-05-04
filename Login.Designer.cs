@@ -96,7 +96,7 @@
             button1.BackgroundImageLayout = ImageLayout.Stretch;
             button1.Cursor = Cursors.Hand;
             button1.Font = new Font("Microsoft YaHei", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            button1.Location = new Point(126, 307);
+            button1.Location = new Point(132, 307);
             button1.Name = "button1";
             button1.Size = new Size(75, 30);
             button1.TabIndex = 6;
@@ -173,6 +173,7 @@
             MinimizeBox = false;
             Name = "Login";
             Text = "Login";
+            Load += Login_Load;
             ResumeLayout(false);
             PerformLayout();
         }
