@@ -5,12 +5,12 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
 
 namespace Activity_7
 {
@@ -45,21 +45,40 @@ namespace Activity_7
 
         private void label3_Click(object sender, EventArgs e)
         {
-
+            // No functionality
         }
 
         private void label1_Click(object sender, EventArgs e)
         {
-
+            // No functionality
         }
 
         private void SignUp_Load(object sender, EventArgs e)
         {
+            // No functionality
+        }
 
+        private string HashPassword(string password)
+        {
+            using (SHA256 sha256 = SHA256.Create())
+            {
+                byte[] bytes = Encoding.UTF8.GetBytes(password);
+                byte[] hashBytes = sha256.ComputeHash(bytes);
+                return Convert.ToBase64String(hashBytes);
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
+            // Input validation
+            if (string.IsNullOrWhiteSpace(username.Text) ||
+                string.IsNullOrWhiteSpace(email.Text) ||
+                string.IsNullOrWhiteSpace(password.Text))
+            {
+                MessageBox.Show("Please fill in all fields!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return; // stop running the rest of the code
+            }
+
             // Database connection
             string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
             using (MySqlConnection conn = new MySqlConnection(connStr))
@@ -80,26 +99,18 @@ namespace Activity_7
                         return;
                     }
 
-                    // Insert the new user into the database
+                    // Hash the password
+                    string hashedPassword = HashPassword(password.Text);
+
+                    // Insert the new user into the database with the hashed password
                     string insertQuery = "INSERT INTO users (username, email, password) VALUES (@Username, @Email, @Password)";
                     MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
                     insertCmd.Parameters.AddWithValue("@Username", username.Text); // Username textbox
                     insertCmd.Parameters.AddWithValue("@Email", email.Text); // Email textbox
-                    insertCmd.Parameters.AddWithValue("@Password", password.Text); // Password textbox
+                    insertCmd.Parameters.AddWithValue("@Password", hashedPassword); // Hashed password
 
                     insertCmd.ExecuteNonQuery();
                     MessageBox.Show("Account created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                    if (string.IsNullOrWhiteSpace(username.Text) ||
-                    string.IsNullOrWhiteSpace(email.Text) ||
-                    string.IsNullOrWhiteSpace(password.Text))
-                    {
-                        MessageBox.Show("Please fill in all fields!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                        return; // stop running the rest of the code
-                    }
-
-                    // If all fields are filled, continue
-                    MessageBox.Show("You successfully created an account!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                     // Redirect to Login form
                     this.Hide();
@@ -123,7 +134,7 @@ namespace Activity_7
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
-
+            // No functionality
         }
 
         private void button2_Click(object sender, EventArgs e)

@@ -37,8 +37,10 @@
             textBox2 = new TextBox();
             label2 = new Label();
             label5 = new Label();
-            linkLabel2 = new LinkLabel();
+            forgotPasswordLink = new LinkLabel();
             button2 = new Button();
+            togglePasswordButton = new Button();
+            checkBox1 = new CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -110,6 +112,7 @@
             textBox2.Name = "textBox2";
             textBox2.Size = new Size(240, 23);
             textBox2.TabIndex = 3;
+            textBox2.UseSystemPasswordChar = true;
             textBox2.TextChanged += textBox2_TextChanged;
             // 
             // label2
@@ -131,15 +134,15 @@
             label5.TabIndex = 10;
             label5.Text = "Please";
             // 
-            // linkLabel2
+            // forgotPasswordLink
             // 
-            linkLabel2.AutoSize = true;
-            linkLabel2.Location = new Point(50, 191);
-            linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(100, 15);
-            linkLabel2.TabIndex = 11;
-            linkLabel2.TabStop = true;
-            linkLabel2.Text = "Forgot Password?";
+            forgotPasswordLink.AutoSize = true;
+            forgotPasswordLink.Location = new Point(50, 230);
+            forgotPasswordLink.Name = "forgotPasswordLink";
+            forgotPasswordLink.Size = new Size(100, 15);
+            forgotPasswordLink.TabIndex = 11;
+            forgotPasswordLink.TabStop = true;
+            forgotPasswordLink.Text = "Forgot Password?";
             // 
             // button2
             // 
@@ -153,13 +156,39 @@
             button2.UseVisualStyleBackColor = true;
             button2.Click += button2_Click;
             // 
+            // togglePasswordButton
+            // 
+            togglePasswordButton.BackColor = SystemColors.Window;
+            togglePasswordButton.FlatAppearance.BorderSize = 0;
+            togglePasswordButton.FlatStyle = FlatStyle.Flat;
+            togglePasswordButton.Font = new Font("Webdings", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 2);
+            togglePasswordButton.Location = new Point(270, 156);
+            togglePasswordButton.Name = "togglePasswordButton";
+            togglePasswordButton.Size = new Size(20, 23);
+            togglePasswordButton.TabIndex = 13;
+            togglePasswordButton.Text = "v";
+            togglePasswordButton.UseVisualStyleBackColor = false;
+            togglePasswordButton.Click += togglePasswordButton_Click;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Location = new Point(52, 185);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(104, 19);
+            checkBox1.TabIndex = 14;
+            checkBox1.Text = "Remember me";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Login
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(351, 365);
+            Controls.Add(checkBox1);
+            Controls.Add(togglePasswordButton);
             Controls.Add(button2);
-            Controls.Add(linkLabel2);
+            Controls.Add(forgotPasswordLink);
             Controls.Add(linkLabel1);
             Controls.Add(label5);
             Controls.Add(label3);
@@ -189,7 +218,9 @@
         private LinkLabel linkLabel1;
         private Label label3;
         private Label label5;
-        private LinkLabel linkLabel2;
+        private LinkLabel forgotPasswordLink;
         private Button button2;
+        private Button togglePasswordButton;
+        private CheckBox checkBox1;
     }
 }
