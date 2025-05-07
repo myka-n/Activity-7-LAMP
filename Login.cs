@@ -15,6 +15,7 @@ using System.IO.IsolatedStorage;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using MimeKit;
+using System.Configuration;
 
 namespace Activity_7
 {
@@ -24,8 +25,8 @@ namespace Activity_7
         private bool isPasswordVisible = false;
         private const string RememberMeFile = "rememberMe.txt"; // Constant for the filename
         // AES Key and IV.  These should be stored securely, NOT hardcoded.
-        private static readonly byte[] Key = { 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10 }; // Example, REPLACE
-        private static readonly byte[] IV = { 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F, 0x20 };    // Example, REPLACE
+        private static readonly byte[] Key = Convert.FromBase64String(ConfigurationManager.AppSettings["EncryptionKey"]);
+        private static readonly byte[] IV = Convert.FromBase64String(ConfigurationManager.AppSettings["EncryptionIV"]);
 
 
         public Login()
@@ -122,8 +123,7 @@ namespace Activity_7
 
         private void InitiatePasswordReset(string userEmail)
         {
-            // 1. Check if the email exists in the database
-            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             using (MySqlConnection conn = new MySqlConnection(connStr))
             {
                 try
@@ -137,16 +137,12 @@ namespace Activity_7
                     if (userIdResult != null)
                     {
                         int userId = Convert.ToInt32(userIdResult);
-                        // 2. Generate a secure reset token
                         string resetToken = GenerateResetToken();
-                        DateTime expirationTime = DateTime.UtcNow.AddHours(24); // Token expires in 24 hours
+                        DateTime expirationTime = DateTime.UtcNow.AddHours(24);
 
-                        // 3. Store the token, user ID, and expiration time in the database
                         if (StoreResetToken(userId, resetToken, expirationTime))
                         {
-                            // Construct the reset link with the token as a query parameter
-                            string resetLink = $"http://localhost/reset?token={resetToken}"; // Changed to a proper URL format
-
+                            string resetLink = $"{ConfigurationManager.AppSettings["ResetLinkBaseUrl"]}?token={resetToken}";
                             string emailBody = $@"
                             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
                                 <h2 style='color: #333;'>Password Reset Request</h2>
@@ -163,8 +159,11 @@ namespace Activity_7
                             </div>";
 
                             SendEmail(userEmail, "Password Reset Request", emailBody);
-
                             MessageBox.Show("A password reset link has been sent to your email address.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                        else
+                        {
+                            MessageBox.Show("Failed to generate reset token. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     else
@@ -174,7 +173,8 @@ namespace Activity_7
                 }
                 catch (MySqlException ex)
                 {
-                    MessageBox.Show("Database Error: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    LogError("Database Error", ex);
+                    MessageBox.Show("An error occurred while processing your request. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 finally
                 {
@@ -196,13 +196,20 @@ namespace Activity_7
 
         private bool StoreResetToken(int userId, string resetToken, DateTime expirationTime)
         {
-            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             using (MySqlConnection conn = new MySqlConnection(connStr))
             {
                 try
                 {
                     conn.Open();
-                    string query = "INSERT INTO password_reset_tokens (user_id, token, expiry_date) VALUES (@UserId, @Token, @Expiry)";
+                    // First, invalidate any existing tokens for this user
+                    string invalidateQuery = "UPDATE password_reset_tokens SET used = 1 WHERE user_id = @UserId AND used = 0";
+                    MySqlCommand invalidateCmd = new MySqlCommand(invalidateQuery, conn);
+                    invalidateCmd.Parameters.AddWithValue("@UserId", userId);
+                    invalidateCmd.ExecuteNonQuery();
+
+                    // Then insert the new token
+                    string query = "INSERT INTO password_reset_tokens (user_id, token, expiry_date, used) VALUES (@UserId, @Token, @Expiry, 0)";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@UserId", userId);
                     cmd.Parameters.AddWithValue("@Token", resetToken);
@@ -211,7 +218,7 @@ namespace Activity_7
                 }
                 catch (MySqlException ex)
                 {
-                    Console.WriteLine("Error storing reset token: " + ex.Message);
+                    LogError("Error storing reset token", ex);
                     return false;
                 }
                 finally
@@ -226,32 +233,26 @@ namespace Activity_7
             try
             {
                 var message = new MimeMessage();
-                message.From.Add(new MailboxAddress("Zeereal Artspace", "zeereal.artspace@gmail.com")); // Replace with your actual email
+                message.From.Add(new MailboxAddress("Zeereal Artspace", ConfigurationManager.AppSettings["EmailAddress"]));
                 message.To.Add(new MailboxAddress("", recipientEmail));
                 message.Subject = subject;
 
-                // Create a more professional HTML email body
                 var bodyBuilder = new BodyBuilder();
                 bodyBuilder.HtmlBody = body;
-
                 message.Body = bodyBuilder.ToMessageBody();
 
-                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                using (var client = new SmtpClient())
                 {
-                    // Gmail SMTP settings
                     client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-                    
-                    // Replace these with your actual credentials
-                    client.Authenticate("mykanaparato@gmail.com", "ewfmyzzcrvznsblo");
-
+                    client.Authenticate(ConfigurationManager.AppSettings["EmailAddress"], 
+                                     ConfigurationManager.AppSettings["EmailPassword"]);
                     client.Send(message);
                     client.Disconnect(true);
                 }
-
-                MessageBox.Show("Password reset instructions have been sent to your email.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
+                LogError("Email Error", ex);
                 string errorMessage = "Failed to send password reset email. ";
                 if (ex.Message.Contains("Authentication"))
                 {
@@ -259,11 +260,18 @@ namespace Activity_7
                 }
                 else
                 {
-                    errorMessage += ex.Message;
+                    errorMessage += "Please try again later.";
                 }
                 MessageBox.Show(errorMessage, "Email Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        private void LogError(string context, Exception ex)
+        {
+            string logMessage = $"[{DateTime.Now}] {context}: {ex.Message}\nStack Trace: {ex.StackTrace}\n";
+            File.AppendAllText("error.log", logMessage);
+        }
+
         private void SetRoundedRegion(int radius)
         {
             GraphicsPath path = new GraphicsPath();
@@ -307,7 +315,7 @@ namespace Activity_7
         private void button1_Click(object sender, EventArgs e)
         {
             // Database connection
-            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             using (MySqlConnection conn = new MySqlConnection(connStr))
             {
                 try

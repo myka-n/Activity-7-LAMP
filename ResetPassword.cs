@@ -3,83 +3,218 @@ using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Security.Cryptography;
 using System.Text;
+using System.Drawing;
+using System.Configuration;
 
 namespace Activity_7
 {
     public partial class ResetPassword : Form
     {
         private string resetToken;
+        private int userId;
+        private TextBox newPasswordBox;
+        private TextBox confirmPasswordBox;
+        private Button resetButton;
+        private Label statusLabel;
 
         public ResetPassword(string token)
         {
-            InitializeComponent();
             this.resetToken = token;
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.BackColor = System.Drawing.Color.White;
+            InitializeComponents();
+            ValidateToken(); // Validate token immediately
         }
 
-        private void InitializeComponent()
+        private void InitializeComponents()
         {
-            this.newPasswordLabel = new System.Windows.Forms.Label();
-            this.confirmPasswordLabel = new System.Windows.Forms.Label();
-            this.newPasswordTextBox = new System.Windows.Forms.TextBox();
-            this.confirmPasswordTextBox = new System.Windows.Forms.TextBox();
-            this.resetButton = new System.Windows.Forms.Button();
-            this.cancelButton = new System.Windows.Forms.Button();
-
-            // newPasswordLabel
-            this.newPasswordLabel.AutoSize = true;
-            this.newPasswordLabel.Location = new System.Drawing.Point(20, 20);
-            this.newPasswordLabel.Size = new System.Drawing.Size(100, 15);
-            this.newPasswordLabel.Text = "New Password:";
-
-            // confirmPasswordLabel
-            this.confirmPasswordLabel.AutoSize = true;
-            this.confirmPasswordLabel.Location = new System.Drawing.Point(20, 60);
-            this.confirmPasswordLabel.Size = new System.Drawing.Size(120, 15);
-            this.confirmPasswordLabel.Text = "Confirm Password:";
-
-            // newPasswordTextBox
-            this.newPasswordTextBox.Location = new System.Drawing.Point(20, 40);
-            this.newPasswordTextBox.Size = new System.Drawing.Size(250, 20);
-            this.newPasswordTextBox.UseSystemPasswordChar = true;
-
-            // confirmPasswordTextBox
-            this.confirmPasswordTextBox.Location = new System.Drawing.Point(20, 80);
-            this.confirmPasswordTextBox.Size = new System.Drawing.Size(250, 20);
-            this.confirmPasswordTextBox.UseSystemPasswordChar = true;
-
-            // resetButton
-            this.resetButton.Location = new System.Drawing.Point(20, 120);
-            this.resetButton.Size = new System.Drawing.Size(100, 30);
-            this.resetButton.Text = "Reset Password";
-            this.resetButton.Click += new System.EventHandler(this.resetButton_Click);
-
-            // cancelButton
-            this.cancelButton.Location = new System.Drawing.Point(170, 120);
-            this.cancelButton.Size = new System.Drawing.Size(100, 30);
-            this.cancelButton.Text = "Cancel";
-            this.cancelButton.Click += new System.EventHandler(this.cancelButton_Click);
-
-            // ResetPassword
-            this.ClientSize = new System.Drawing.Size(290, 170);
-            this.Controls.Add(this.newPasswordLabel);
-            this.Controls.Add(this.confirmPasswordLabel);
-            this.Controls.Add(this.newPasswordTextBox);
-            this.Controls.Add(this.confirmPasswordTextBox);
-            this.Controls.Add(this.resetButton);
-            this.Controls.Add(this.cancelButton);
-            this.Name = "ResetPassword";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Reset Password";
+            this.Size = new Size(400, 350);
+            this.StartPosition = FormStartPosition.CenterScreen;
+            this.BackColor = Color.White;
+            this.FormBorderStyle = FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+
+            Label titleLabel = new Label
+            {
+                Text = "Reset Your Password",
+                Font = new Font("Arial", 14, FontStyle.Bold),
+                Location = new Point(20, 20),
+                Size = new Size(360, 30),
+                TextAlign = ContentAlignment.MiddleCenter
+            };
+
+            Label newPasswordLabel = new Label
+            {
+                Text = "New Password:",
+                Location = new Point(20, 70),
+                Size = new Size(100, 20)
+            };
+
+            newPasswordBox = new TextBox
+            {
+                Location = new Point(20, 100),
+                Size = new Size(340, 25),
+                PasswordChar = '•',
+                Font = new Font("Arial", 10)
+            };
+
+            Label confirmPasswordLabel = new Label
+            {
+                Text = "Confirm Password:",
+                Location = new Point(20, 140),
+                Size = new Size(100, 20)
+            };
+
+            confirmPasswordBox = new TextBox
+            {
+                Location = new Point(20, 170),
+                Size = new Size(340, 25),
+                PasswordChar = '•',
+                Font = new Font("Arial", 10)
+            };
+
+            resetButton = new Button
+            {
+                Text = "Reset Password",
+                Location = new Point(20, 220),
+                Size = new Size(340, 35),
+                BackColor = Color.FromArgb(0, 122, 204),
+                ForeColor = Color.White,
+                FlatStyle = FlatStyle.Flat,
+                Font = new Font("Arial", 10, FontStyle.Bold)
+            };
+
+            statusLabel = new Label
+            {
+                Location = new Point(20, 270),
+                Size = new Size(340, 20),
+                TextAlign = ContentAlignment.MiddleCenter,
+                ForeColor = Color.Red
+            };
+
+            resetButton.Click += ResetButton_Click;
+
+            this.Controls.AddRange(new Control[] { 
+                titleLabel, 
+                newPasswordLabel, 
+                newPasswordBox, 
+                confirmPasswordLabel, 
+                confirmPasswordBox, 
+                resetButton,
+                statusLabel 
+            });
         }
 
-        private System.Windows.Forms.Label newPasswordLabel;
-        private System.Windows.Forms.Label confirmPasswordLabel;
-        private System.Windows.Forms.TextBox newPasswordTextBox;
-        private System.Windows.Forms.TextBox confirmPasswordTextBox;
-        private System.Windows.Forms.Button resetButton;
-        private System.Windows.Forms.Button cancelButton;
+        private void ResetButton_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(newPasswordBox.Text) || string.IsNullOrEmpty(confirmPasswordBox.Text))
+            {
+                statusLabel.Text = "Please fill in all fields.";
+                return;
+            }
+
+            if (newPasswordBox.Text != confirmPasswordBox.Text)
+            {
+                statusLabel.Text = "Passwords do not match.";
+                return;
+            }
+
+            if (newPasswordBox.Text.Length < 8)
+            {
+                statusLabel.Text = "Password must be at least 8 characters long.";
+                return;
+            }
+
+            if (UpdatePassword(newPasswordBox.Text))
+            {
+                MessageBox.Show("Password has been reset successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                this.DialogResult = DialogResult.OK;
+                this.Close();
+            }
+            else
+            {
+                statusLabel.Text = "Failed to reset password. Please try again.";
+            }
+        }
+
+        private bool ValidateToken()
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"SELECT user_id FROM password_reset_tokens 
+                                   WHERE token = @Token AND expiry_date > NOW() 
+                                   AND used = 0";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Token", resetToken);
+                    object result = cmd.ExecuteScalar();
+
+                    if (result != null)
+                    {
+                        userId = Convert.ToInt32(result);
+                        return true;
+                    }
+                    else
+                    {
+                        statusLabel.Text = "Invalid or expired reset token.";
+                        resetButton.Enabled = false;
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    statusLabel.Text = "Error validating token. Please try again.";
+                    resetButton.Enabled = false;
+                    return false;
+                }
+            }
+        }
+
+        private bool UpdatePassword(string newPassword)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    using (MySqlTransaction transaction = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            // Update password
+                            string updatePasswordQuery = "UPDATE users SET password = @Password WHERE user_id = @UserId";
+                            MySqlCommand updateCmd = new MySqlCommand(updatePasswordQuery, conn, transaction);
+                            updateCmd.Parameters.AddWithValue("@Password", HashPassword(newPassword));
+                            updateCmd.Parameters.AddWithValue("@UserId", userId);
+                            updateCmd.ExecuteNonQuery();
+
+                            // Mark token as used
+                            string updateTokenQuery = "UPDATE password_reset_tokens SET used = 1 WHERE token = @Token";
+                            MySqlCommand tokenCmd = new MySqlCommand(updateTokenQuery, conn, transaction);
+                            tokenCmd.Parameters.AddWithValue("@Token", resetToken);
+                            tokenCmd.ExecuteNonQuery();
+
+                            transaction.Commit();
+                            return true;
+                        }
+                        catch
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    statusLabel.Text = "Error updating password. Please try again.";
+                    return false;
+                }
+            }
+        }
 
         private string HashPassword(string password)
         {
@@ -89,79 +224,6 @@ namespace Activity_7
                 byte[] hashBytes = sha256.ComputeHash(bytes);
                 return Convert.ToBase64String(hashBytes);
             }
-        }
-
-        private void resetButton_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(newPasswordTextBox.Text) || string.IsNullOrEmpty(confirmPasswordTextBox.Text))
-            {
-                MessageBox.Show("Please enter both passwords.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (newPasswordTextBox.Text != confirmPasswordTextBox.Text)
-            {
-                MessageBox.Show("Passwords do not match.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string connStr = "server=localhost;user=root;password=mykz;database=zeereal_artspace";
-            using (MySqlConnection conn = new MySqlConnection(connStr))
-            {
-                try
-                {
-                    conn.Open();
-                    
-                    // First, verify the token and get the user_id
-                    string verifyQuery = @"SELECT user_id FROM password_reset_tokens 
-                                         WHERE token = @Token AND expiry_date > NOW() 
-                                         AND used = 0";
-                    
-                    MySqlCommand verifyCmd = new MySqlCommand(verifyQuery, conn);
-                    verifyCmd.Parameters.AddWithValue("@Token", resetToken);
-                    
-                    object userIdResult = verifyCmd.ExecuteScalar();
-                    
-                    if (userIdResult != null)
-                    {
-                        int userId = Convert.ToInt32(userIdResult);
-                        string hashedPassword = HashPassword(newPasswordTextBox.Text);
-                        
-                        // Update the password
-                        string updateQuery = "UPDATE users SET password = @Password WHERE user_id = @UserId";
-                        MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn);
-                        updateCmd.Parameters.AddWithValue("@Password", hashedPassword);
-                        updateCmd.Parameters.AddWithValue("@UserId", userId);
-                        
-                        if (updateCmd.ExecuteNonQuery() > 0)
-                        {
-                            // Mark the token as used
-                            string markUsedQuery = "UPDATE password_reset_tokens SET used = 1 WHERE token = @Token";
-                            MySqlCommand markUsedCmd = new MySqlCommand(markUsedQuery, conn);
-                            markUsedCmd.Parameters.AddWithValue("@Token", resetToken);
-                            markUsedCmd.ExecuteNonQuery();
-                            
-                            MessageBox.Show("Password has been reset successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.DialogResult = DialogResult.OK;
-                            this.Close();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("Invalid or expired reset token.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    }
-                }
-                catch (MySqlException ex)
-                {
-                    MessageBox.Show("Database Error: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-        }
-
-        private void cancelButton_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            this.Close();
         }
     }
 } 
