@@ -145,9 +145,23 @@ namespace Activity_7
                         if (StoreResetToken(userId, resetToken, expirationTime))
                         {
                             // Construct the reset link with the token as a query parameter
-                            string resetLink = $"resetpassword://{resetToken}"; // This will be handled by the application
+                            string resetLink = $"http://localhost/reset?token={resetToken}"; // Changed to a proper URL format
 
-                            string emailBody = $"Please click the following link to reset your password: <a href=\"{resetLink}\">{resetLink}</a>. This link will expire in 24 hours.";
+                            string emailBody = $@"
+                            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                                <h2 style='color: #333;'>Password Reset Request</h2>
+                                <p>Hello,</p>
+                                <p>We received a request to reset your password for your Zeereal Artspace account.</p>
+                                <p>Click the button below to reset your password:</p>
+                                <div style='text-align: center; margin: 30px 0;'>
+                                    <a href='{resetLink}' style='background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;'>Reset Password</a>
+                                </div>
+                                <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                                <p>This link will expire in 24 hours.</p>
+                                <hr style='margin: 20px 0;'>
+                                <p style='color: #666; font-size: 12px;'>This is an automated message from Zeereal Artspace. Please do not reply to this email.</p>
+                            </div>";
+
                             SendEmail(userEmail, "Password Reset Request", emailBody);
 
                             MessageBox.Show("A password reset link has been sent to your email address.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -218,20 +232,7 @@ namespace Activity_7
 
                 // Create a more professional HTML email body
                 var bodyBuilder = new BodyBuilder();
-                bodyBuilder.HtmlBody = $@"
-                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
-                        <h2 style='color: #333;'>Password Reset Request</h2>
-                        <p>Hello,</p>
-                        <p>We received a request to reset your password for your Zeereal Artspace account.</p>
-                        <p>Click the button below to reset your password:</p>
-                        <div style='text-align: center; margin: 30px 0;'>
-                            <a href='{body}' style='background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>Reset Password</a>
-                        </div>
-                        <p>If you didn't request this password reset, you can safely ignore this email.</p>
-                        <p>This link will expire in 24 hours.</p>
-                        <hr style='margin: 20px 0;'>
-                        <p style='color: #666; font-size: 12px;'>This is an automated message from Zeereal Artspace. Please do not reply to this email.</p>
-                    </div>";
+                bodyBuilder.HtmlBody = body;
 
                 message.Body = bodyBuilder.ToMessageBody();
 

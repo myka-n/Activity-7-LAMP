@@ -10,10 +10,18 @@ namespace Activity_7
         ///  The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             // Initialize application configuration
             ApplicationConfiguration.Initialize();
+
+            // Check if this is a password reset request
+            if (args.Length > 0 && args[0].StartsWith("http://localhost/reset?token="))
+            {
+                string token = args[0].Split('=')[1];
+                Application.Run(new ResetPassword(token));
+                return;
+            }
 
             // Define your MySQL connection string
             string connectionString = "server=localhost;user id=root;password=mykz;database=zeereal_artspace;";
