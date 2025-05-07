@@ -76,14 +76,24 @@
             label6 = new Label();
             activity = new TabPage();
             label1 = new Label();
-            linkLabel11 = new LinkLabel();
-            bio = new Label();
+            bio = new TextBox();
+            bio.Multiline = true;
+            bio.ScrollBars = ScrollBars.Vertical;
+            bio.ReadOnly = true;
+            bio.Location = new Point(14, 235);
+            bio.Size = new Size(514, 50);
+            bio.Font = new Font("Segoe UI", 10);
+            bio.BorderStyle = BorderStyle.FixedSingle;
             username = new Label();
             openFileDialog1 = new OpenFileDialog();
             postSettings = new ContextMenuStrip(components);
             editToolStripMenuItem = new ToolStripMenuItem();
             deleteToolStripMenuItem = new ToolStripMenuItem();
             moveToArchiveToolStripMenuItem = new ToolStripMenuItem();
+            btnEditProfile = new Button();
+            btnCancel = new Button();
+            btnChangeProfilePic = new Button();
+            btnLogout = new Button();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
@@ -307,7 +317,10 @@
             panel1.Controls.Add(textBox2);
             panel1.Controls.Add(tabControl1);
             panel1.Controls.Add(label1);
-            panel1.Controls.Add(linkLabel11);
+            panel1.Controls.Add(btnEditProfile);
+            panel1.Controls.Add(btnCancel);
+            panel1.Controls.Add(btnChangeProfilePic);
+            panel1.Controls.Add(btnLogout);
             panel1.Controls.Add(bio);
             panel1.Controls.Add(username);
             panel1.Controls.Add(profilepic);
@@ -597,26 +610,6 @@
             label1.Text = "My Account";
             label1.Click += label1_Click;
             // 
-            // linkLabel11
-            // 
-            linkLabel11.AutoSize = true;
-            linkLabel11.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel11.Location = new Point(16, 294);
-            linkLabel11.Name = "linkLabel11";
-            linkLabel11.Size = new Size(67, 15);
-            linkLabel11.TabIndex = 14;
-            linkLabel11.TabStop = true;
-            linkLabel11.Text = "Edit Profile ";
-            // 
-            // bio
-            // 
-            bio.AutoSize = true;
-            bio.Location = new Point(14, 235);
-            bio.Name = "bio";
-            bio.Size = new Size(60, 15);
-            bio.TabIndex = 13;
-            bio.Text = "About me";
-            // 
             // username
             // 
             username.AutoSize = true;
@@ -653,6 +646,59 @@
             moveToArchiveToolStripMenuItem.Name = "moveToArchiveToolStripMenuItem";
             moveToArchiveToolStripMenuItem.Size = new Size(159, 22);
             moveToArchiveToolStripMenuItem.Text = "Move to archive";
+            // 
+            // btnEditProfile
+            // 
+            btnEditProfile.Text = "Edit Profile";
+            btnEditProfile.Location = new Point(16, 294);
+            btnEditProfile.Size = new Size(120, 35);
+            btnEditProfile.FlatStyle = FlatStyle.Flat;
+            btnEditProfile.FlatAppearance.BorderSize = 0;
+            btnEditProfile.BackColor = Color.FromArgb(0, 122, 204);
+            btnEditProfile.ForeColor = Color.White;
+            btnEditProfile.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnEditProfile.Cursor = Cursors.Hand;
+            btnEditProfile.Click += btnEditProfile_Click;
+            // 
+            // btnCancel
+            // 
+            btnCancel.Text = "Cancel";
+            btnCancel.Location = new Point(146, 294);
+            btnCancel.Size = new Size(120, 35);
+            btnCancel.FlatStyle = FlatStyle.Flat;
+            btnCancel.FlatAppearance.BorderSize = 0;
+            btnCancel.BackColor = Color.FromArgb(220, 53, 69);
+            btnCancel.ForeColor = Color.White;
+            btnCancel.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnCancel.Cursor = Cursors.Hand;
+            btnCancel.Visible = false;
+            btnCancel.Click += btnCancel_Click;
+            // 
+            // btnChangeProfilePic
+            // 
+            btnChangeProfilePic.Text = "Change Picture";
+            btnChangeProfilePic.Location = new Point(14, 95);
+            btnChangeProfilePic.Size = new Size(113, 30);
+            btnChangeProfilePic.FlatStyle = FlatStyle.Flat;
+            btnChangeProfilePic.FlatAppearance.BorderSize = 0;
+            btnChangeProfilePic.BackColor = Color.FromArgb(0, 122, 204);
+            btnChangeProfilePic.ForeColor = Color.White;
+            btnChangeProfilePic.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnChangeProfilePic.Cursor = Cursors.Hand;
+            btnChangeProfilePic.Click += btnChangeProfilePic_Click;
+            // 
+            // btnLogout
+            // 
+            btnLogout.Text = "Logout";
+            btnLogout.Location = new Point(500, 294);
+            btnLogout.Size = new Size(80, 35);
+            btnLogout.FlatStyle = FlatStyle.Flat;
+            btnLogout.FlatAppearance.BorderSize = 0;
+            btnLogout.BackColor = Color.FromArgb(108, 117, 125);
+            btnLogout.ForeColor = Color.White;
+            btnLogout.Font = new Font("Segoe UI", 9, FontStyle.Bold);
+            btnLogout.Cursor = Cursors.Hand;
+            btnLogout.Click += btnLogout_Click;
             // 
             // myAccount
             // 
@@ -716,9 +762,8 @@
         private PictureBox profilepic;
         private Panel panel1;
         private Label label1;
-        private Label bio;
+        private TextBox bio;
         private Label username;
-        private LinkLabel linkLabel11;
         private OpenFileDialog openFileDialog1;
         private TabControl tabControl1;
         private TabPage myPosts;
@@ -750,5 +795,9 @@
         private ToolStripMenuItem deleteToolStripMenuItem;
         private ToolStripMenuItem moveToArchiveToolStripMenuItem;
         private LinkLabel linkLabel14;
+        private Button btnEditProfile;
+        private Button btnCancel;
+        private Button btnChangeProfilePic;
+        private Button btnLogout;
     }
 }
