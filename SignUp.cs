@@ -11,6 +11,12 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using System.Net.Mail;
+using System.Net;
+using System.Net.NetworkInformation;
 
 namespace Activity_7
 {
@@ -68,6 +74,73 @@ namespace Activity_7
             }
         }
 
+        private bool VerifyEmailDomain(string email)
+        {
+            try
+            {
+                // Extract domain from email
+                string domain = email.Split('@')[1];
+
+                // Check if domain has valid MX records
+                var mxRecords = Dns.GetHostAddresses(domain);
+                if (mxRecords.Length == 0)
+                {
+                    MessageBox.Show("Invalid email domain. Please enter a valid email address.", "Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return false;
+                }
+
+                // Try to connect to the SMTP server
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    try
+                    {
+                        // Try to connect to common SMTP servers for the domain
+                        string[] commonSmtpServers = {
+                            $"smtp.{domain}",
+                            $"mail.{domain}",
+                            $"smtp.gmail.com",  // For Gmail
+                            $"smtp.office365.com",  // For Outlook
+                            $"smtp.mail.yahoo.com"  // For Yahoo
+                        };
+
+                        bool connected = false;
+                        foreach (var server in commonSmtpServers)
+                        {
+                            try
+                            {
+                                client.Connect(server, 587, SecureSocketOptions.StartTls);
+                                connected = true;
+                                break;
+                            }
+                            catch
+                            {
+                                continue;
+                            }
+                        }
+
+                        if (!connected)
+                        {
+                            MessageBox.Show("Could not verify email domain. Please enter a valid email address.", "Email Verification Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            return false;
+                        }
+
+                        client.Disconnect(true);
+                        return true;
+                    }
+                    catch
+                    {
+                        MessageBox.Show("Could not verify email domain. Please enter a valid email address.", "Email Verification Failed", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        return false;
+                    }
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Invalid email format. Please enter a valid email address.", "Invalid Email", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return false;
+            }
+        }
+
         private void button1_Click(object sender, EventArgs e)
         {
             // Input validation
@@ -76,7 +149,13 @@ namespace Activity_7
                 string.IsNullOrWhiteSpace(password.Text))
             {
                 MessageBox.Show("Please fill in all fields!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return; // stop running the rest of the code
+                return;
+            }
+
+            // Verify email domain
+            if (!VerifyEmailDomain(email.Text))
+            {
+                return;
             }
 
             // Database connection
@@ -90,7 +169,7 @@ namespace Activity_7
                     // Check if email already exists
                     string checkQuery = "SELECT COUNT(*) FROM users WHERE email = @Email";
                     MySqlCommand checkCmd = new MySqlCommand(checkQuery, conn);
-                    checkCmd.Parameters.AddWithValue("@Email", email.Text); // Email textbox
+                    checkCmd.Parameters.AddWithValue("@Email", email.Text);
 
                     int emailExists = Convert.ToInt32(checkCmd.ExecuteScalar());
                     if (emailExists > 0)
@@ -105,9 +184,9 @@ namespace Activity_7
                     // Insert the new user into the database with the hashed password
                     string insertQuery = "INSERT INTO users (username, email, password) VALUES (@Username, @Email, @Password)";
                     MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
-                    insertCmd.Parameters.AddWithValue("@Username", username.Text); // Username textbox
-                    insertCmd.Parameters.AddWithValue("@Email", email.Text); // Email textbox
-                    insertCmd.Parameters.AddWithValue("@Password", hashedPassword); // Hashed password
+                    insertCmd.Parameters.AddWithValue("@Username", username.Text);
+                    insertCmd.Parameters.AddWithValue("@Email", email.Text);
+                    insertCmd.Parameters.AddWithValue("@Password", hashedPassword);
 
                     insertCmd.ExecuteNonQuery();
                     MessageBox.Show("Account created successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -123,7 +202,6 @@ namespace Activity_7
                 }
             }
         }
-
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {

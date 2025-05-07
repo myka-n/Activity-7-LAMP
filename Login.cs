@@ -208,61 +208,61 @@ namespace Activity_7
         }
 
         private void SendEmail(string recipientEmail, string subject, string body)
-{
-    try
-    {
-        var message = new MimeMessage();
-        message.From.Add(new MailboxAddress("Zeereal Artspace", "zeereal.artspace@gmail.com")); // Replace with your actual email
-        message.To.Add(new MailboxAddress("", recipientEmail));
-        message.Subject = subject;
-
-        // Create a more professional HTML email body
-        var bodyBuilder = new BodyBuilder();
-        bodyBuilder.HtmlBody = $@"
-            <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
-                <h2 style='color: #333;'>Password Reset Request</h2>
-                <p>Hello,</p>
-                <p>We received a request to reset your password for your Zeereal Artspace account.</p>
-                <p>Click the button below to reset your password:</p>
-                <div style='text-align: center; margin: 30px 0;'>
-                    <a href='{body}' style='background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>Reset Password</a>
-                </div>
-                <p>If you didn't request this password reset, you can safely ignore this email.</p>
-                <p>This link will expire in 24 hours.</p>
-                <hr style='margin: 20px 0;'>
-                <p style='color: #666; font-size: 12px;'>This is an automated message from Zeereal Artspace. Please do not reply to this email.</p>
-            </div>";
-
-        message.Body = bodyBuilder.ToMessageBody();
-
-        using (var client = new SmtpClient())
         {
-            // Gmail SMTP settings
-            client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
-            
-            // Replace these with your actual credentials
-            client.Authenticate("mykanaparato@gmail.com", "ewfmyzzcrvznsblo");
+            try
+            {
+                var message = new MimeMessage();
+                message.From.Add(new MailboxAddress("Zeereal Artspace", "zeereal.artspace@gmail.com")); // Replace with your actual email
+                message.To.Add(new MailboxAddress("", recipientEmail));
+                message.Subject = subject;
 
-            client.Send(message);
-            client.Disconnect(true);
-        }
+                // Create a more professional HTML email body
+                var bodyBuilder = new BodyBuilder();
+                bodyBuilder.HtmlBody = $@"
+                    <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
+                        <h2 style='color: #333;'>Password Reset Request</h2>
+                        <p>Hello,</p>
+                        <p>We received a request to reset your password for your Zeereal Artspace account.</p>
+                        <p>Click the button below to reset your password:</p>
+                        <div style='text-align: center; margin: 30px 0;'>
+                            <a href='{body}' style='background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px;'>Reset Password</a>
+                        </div>
+                        <p>If you didn't request this password reset, you can safely ignore this email.</p>
+                        <p>This link will expire in 24 hours.</p>
+                        <hr style='margin: 20px 0;'>
+                        <p style='color: #666; font-size: 12px;'>This is an automated message from Zeereal Artspace. Please do not reply to this email.</p>
+                    </div>";
 
-        MessageBox.Show("Password reset instructions have been sent to your email.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
-    }
-    catch (Exception ex)
-    {
-        string errorMessage = "Failed to send password reset email. ";
-        if (ex.Message.Contains("Authentication"))
-        {
-            errorMessage += "Please contact support for assistance.";
+                message.Body = bodyBuilder.ToMessageBody();
+
+                using (var client = new MailKit.Net.Smtp.SmtpClient())
+                {
+                    // Gmail SMTP settings
+                    client.Connect("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+                    
+                    // Replace these with your actual credentials
+                    client.Authenticate("mykanaparato@gmail.com", "ewfmyzzcrvznsblo");
+
+                    client.Send(message);
+                    client.Disconnect(true);
+                }
+
+                MessageBox.Show("Password reset instructions have been sent to your email.", "Email Sent", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                string errorMessage = "Failed to send password reset email. ";
+                if (ex.Message.Contains("Authentication"))
+                {
+                    errorMessage += "Please contact support for assistance.";
+                }
+                else
+                {
+                    errorMessage += ex.Message;
+                }
+                MessageBox.Show(errorMessage, "Email Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
-        else
-        {
-            errorMessage += ex.Message;
-        }
-        MessageBox.Show(errorMessage, "Email Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-    }
-}
         private void SetRoundedRegion(int radius)
         {
             GraphicsPath path = new GraphicsPath();
