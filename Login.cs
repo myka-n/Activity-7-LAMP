@@ -41,6 +41,14 @@ namespace Activity_7
             {
                 forgotPasswordLink.LinkClicked += ForgotPasswordLink_LinkClicked;
             }
+
+            // Check if we have a reset token in the command line arguments
+            string[] args = Environment.GetCommandLineArgs();
+            if (args.Length > 1 && args[1].StartsWith("token="))
+            {
+                string token = args[1].Substring(6); // Remove "token=" prefix
+                OpenResetPasswordForm(token);
+            }
         }
 
         private void InitializePasswordToggle()
@@ -121,6 +129,25 @@ namespace Activity_7
             return null;
         }
 
+        private void OpenResetPasswordForm(string token)
+        {
+            try
+            {
+                ResetPassword resetForm = new ResetPassword(token);
+                if (resetForm.ShowDialog() == DialogResult.OK)
+                {
+                    MessageBox.Show("Password has been reset successfully. Please login with your new password.", 
+                        "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+            }
+            catch (Exception ex)
+            {
+                LogError("Error opening reset form", ex);
+                MessageBox.Show("Error opening password reset form. Please try again.", 
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
         private void InitiatePasswordReset(string userEmail)
         {
             string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
@@ -137,33 +164,33 @@ namespace Activity_7
                     if (userIdResult != null)
                     {
                         int userId = Convert.ToInt32(userIdResult);
-                        string resetToken = GenerateResetToken();
+                        // Generate a 6-digit code
+                        string resetCode = GenerateResetCode();
                         DateTime expirationTime = DateTime.UtcNow.AddHours(24);
 
-                        if (StoreResetToken(userId, resetToken, expirationTime))
+                        if (StoreResetToken(userId, resetCode, expirationTime))
                         {
-                            string resetLink = $"{ConfigurationManager.AppSettings["ResetLinkBaseUrl"]}?token={resetToken}";
                             string emailBody = $@"
                             <div style='font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;'>
-                                <h2 style='color: #333;'>Password Reset Request</h2>
+                                <h2 style='color: #333;'>Password Reset Code</h2>
                                 <p>Hello,</p>
                                 <p>We received a request to reset your password for your Zeereal Artspace account.</p>
-                                <p>Click the button below to reset your password:</p>
+                                <p>Your password reset code is:</p>
                                 <div style='text-align: center; margin: 30px 0;'>
-                                    <a href='{resetLink}' style='background-color: #4CAF50; color: white; padding: 12px 24px; text-decoration: none; border-radius: 4px; display: inline-block;'>Reset Password</a>
+                                    <h1 style='color: #4CAF50; font-size: 32px; letter-spacing: 5px;'>{resetCode}</h1>
                                 </div>
-                                <p>If you didn't request this password reset, you can safely ignore this email.</p>
-                                <p>This link will expire in 24 hours.</p>
+                                <p>Enter this code in the password reset form to set a new password.</p>
+                                <p>This code will expire in 24 hours.</p>
                                 <hr style='margin: 20px 0;'>
                                 <p style='color: #666; font-size: 12px;'>This is an automated message from Zeereal Artspace. Please do not reply to this email.</p>
                             </div>";
 
-                            SendEmail(userEmail, "Password Reset Request", emailBody);
-                            MessageBox.Show("A password reset link has been sent to your email address.", "Password Reset", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            SendEmail(userEmail, "Password Reset Code", emailBody);
+                            ShowResetCodeForm();
                         }
                         else
                         {
-                            MessageBox.Show("Failed to generate reset token. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("Failed to generate reset code. Please try again later.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                     else
@@ -183,18 +210,107 @@ namespace Activity_7
             }
         }
 
-        private string GenerateResetToken()
+        private string GenerateResetCode()
         {
-            // Generate a cryptographically secure random token
-            byte[] tokenBytes = new byte[32];
-            using (var rng = new RNGCryptoServiceProvider())
+            // Generate a 6-digit code
+            Random random = new Random();
+            return random.Next(100000, 999999).ToString();
+        }
+
+        private void ShowResetCodeForm()
+        {
+            using (var form = new Form())
             {
-                rng.GetBytes(tokenBytes);
-                return Convert.ToBase64String(tokenBytes);
+                form.Text = "Enter Reset Code";
+                form.Size = new Size(400, 200);
+                form.StartPosition = FormStartPosition.CenterParent;
+                form.FormBorderStyle = FormBorderStyle.FixedDialog;
+                form.MaximizeBox = false;
+                form.MinimizeBox = false;
+
+                var label = new Label
+                {
+                    Text = "Please enter the 6-digit code sent to your email:",
+                    Location = new Point(20, 20),
+                    Size = new Size(340, 40),
+                    TextAlign = ContentAlignment.MiddleCenter
+                };
+
+                var codeBox = new TextBox
+                {
+                    Location = new Point(20, 70),
+                    Size = new Size(340, 25),
+                    MaxLength = 6,
+                    Font = new Font("Arial", 14),
+                    TextAlign = HorizontalAlignment.Center
+                };
+
+                var submitButton = new Button
+                {
+                    Text = "Submit",
+                    Location = new Point(20, 110),
+                    Size = new Size(340, 35),
+                    BackColor = Color.FromArgb(0, 122, 204),
+                    ForeColor = Color.White,
+                    FlatStyle = FlatStyle.Flat,
+                    Font = new Font("Arial", 10, FontStyle.Bold)
+                };
+
+                submitButton.Click += (s, e) =>
+                {
+                    if (ValidateResetCode(codeBox.Text))
+                    {
+                        form.DialogResult = DialogResult.OK;
+                        form.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Invalid or expired code. Please try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                };
+
+                form.Controls.AddRange(new Control[] { label, codeBox, submitButton });
+                form.AcceptButton = submitButton;
+
+                if (form.ShowDialog() == DialogResult.OK)
+                {
+                    // Show the reset password form
+                    using (var resetForm = new ResetPassword(codeBox.Text))
+                    {
+                        if (resetForm.ShowDialog() == DialogResult.OK)
+                        {
+                            MessageBox.Show("Password has been reset successfully. Please login with your new password.", 
+                                "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        }
+                    }
+                }
             }
         }
 
-        private bool StoreResetToken(int userId, string resetToken, DateTime expirationTime)
+        private bool ValidateResetCode(string code)
+        {
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = @"SELECT user_id FROM password_reset_tokens 
+                                   WHERE token = @Code AND expiry_date > NOW() 
+                                   AND used = 0";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@Code", code);
+                    return cmd.ExecuteScalar() != null;
+                }
+                catch (Exception ex)
+                {
+                    LogError("Error validating reset code", ex);
+                    return false;
+                }
+            }
+        }
+
+        private bool StoreResetToken(int userId, string token, DateTime expirationTime)
         {
             string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
             using (MySqlConnection conn = new MySqlConnection(connStr))
@@ -208,22 +324,20 @@ namespace Activity_7
                     invalidateCmd.Parameters.AddWithValue("@UserId", userId);
                     invalidateCmd.ExecuteNonQuery();
 
-                    // Then insert the new token
-                    string query = "INSERT INTO password_reset_tokens (user_id, token, expiry_date, used) VALUES (@UserId, @Token, @Expiry, 0)";
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@UserId", userId);
-                    cmd.Parameters.AddWithValue("@Token", resetToken);
-                    cmd.Parameters.AddWithValue("@Expiry", expirationTime);
-                    return cmd.ExecuteNonQuery() > 0;
+                    // Insert the new token
+                    string insertQuery = @"INSERT INTO password_reset_tokens (user_id, token, expiry_date, used) 
+                                         VALUES (@UserId, @Token, @ExpiryDate, 0)";
+                    MySqlCommand insertCmd = new MySqlCommand(insertQuery, conn);
+                    insertCmd.Parameters.AddWithValue("@UserId", userId);
+                    insertCmd.Parameters.AddWithValue("@Token", token);
+                    insertCmd.Parameters.AddWithValue("@ExpiryDate", expirationTime);
+                    
+                    return insertCmd.ExecuteNonQuery() > 0;
                 }
-                catch (MySqlException ex)
+                catch (Exception ex)
                 {
                     LogError("Error storing reset token", ex);
                     return false;
-                }
-                finally
-                {
-                    if (conn.State == ConnectionState.Open) conn.Close();
                 }
             }
         }
@@ -535,8 +649,6 @@ namespace Activity_7
                 Console.WriteLine("Error clearing saved login: " + ex.Message);
             }
         }
-
-
 
         // --- Encryption Helper Methods (AES Example) ---
         //  IMPORTANT:  Replace these with your actual, secure encryption implementation.

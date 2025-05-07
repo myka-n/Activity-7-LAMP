@@ -1,0 +1,12 @@
+Windows Registry Editor Version 5.00
+
+[HKEY_CLASSES_ROOT\zeereal]
+@="URL:Zeereal Artspace Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\zeereal\shell]
+
+[HKEY_CLASSES_ROOT\zeereal\shell\open]
+
+[HKEY_CLASSES_ROOT\zeereal\shell\open\command]
+@="\"C:\\Path\\To\\Your\\Application.exe\" \"%1\"" 
