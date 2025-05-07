@@ -105,7 +105,7 @@ namespace Activity_7
         private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Hide();
-            myAccount my_AccountForm = new myAccount();
+            MyAccount my_AccountForm = new MyAccount();
             my_AccountForm.ShowDialog();
         }
 

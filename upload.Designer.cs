@@ -1,6 +1,6 @@
 ﻿namespace Activity_7
 {
-    partial class upload
+    partial class Upload
     {
         /// <summary>
         /// Required designer variable.

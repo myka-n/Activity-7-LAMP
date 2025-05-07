@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Activity_7
 {
-    public partial class upload : Form
+    public partial class Upload : Form
     {
-        public upload()
+        public Upload()
         {
             InitializeComponent();
         }

@@ -14,14 +14,14 @@ using System.IO;
 
 namespace Activity_7
 {
-    public partial class myAccount : Form
+    public partial class MyAccount : Form
     {
         private bool isEditing = false;
         private string originalBio;
         private string originalUsername;
         private string originalProfilePicPath;
 
-        public myAccount()
+        public MyAccount()
         {
             InitializeComponent();
             this.FormBorderStyle = FormBorderStyle.None;
@@ -33,25 +33,25 @@ namespace Activity_7
         private void SetupResponsiveDesign()
         {
             // Make the form resizable
-            this.MinimumSize = new Size(800, 600);
-            
+            this.MinimumSize = new Size(618, 788);
+
             // Set up anchor points for controls
             profilepic.Anchor = AnchorStyles.Top | AnchorStyles.Left;
             username.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             bio.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
-            
+
             // Set up the profile picture
             profilepic.SizeMode = PictureBoxSizeMode.Zoom;
             profilepic.BorderStyle = BorderStyle.FixedSingle;
-            
+
             // Style the bio textbox
             bio.Multiline = true;
             bio.ScrollBars = ScrollBars.Vertical;
             bio.Font = new Font("Segoe UI", 10);
-            
+
             // Style the username label
             username.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-            
+
             // Add hover effects for buttons
             foreach (Control control in this.Controls)
             {
@@ -64,7 +64,7 @@ namespace Activity_7
                     button.ForeColor = Color.White;
                     button.Font = new Font("Segoe UI", 9, FontStyle.Bold);
                     button.Cursor = Cursors.Hand;
-                    
+
                     // Add hover effect
                     button.MouseEnter += (s, e) => button.BackColor = Color.FromArgb(0, 102, 184);
                     button.MouseLeave += (s, e) => button.BackColor = Color.FromArgb(0, 122, 204);
@@ -125,19 +125,19 @@ namespace Activity_7
                                        username = @Username,
                                        profile_pic = @ProfilePic
                                    WHERE user_id = @UserId";
-                    
+
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@Bio", bio.Text);
                     cmd.Parameters.AddWithValue("@Username", username.Text);
                     cmd.Parameters.AddWithValue("@ProfilePic", Session.ProfilePicPath);
                     cmd.Parameters.AddWithValue("@UserId", Session.UserId);
-                    
+
                     cmd.ExecuteNonQuery();
-                    
+
                     // Update session data
                     Session.Bio = bio.Text;
                     Session.Username = username.Text;
-                    
+
                     MessageBox.Show("Profile updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -221,7 +221,7 @@ namespace Activity_7
             {
                 profilepic.ImageLocation = originalProfilePicPath;
             }
-            
+
             isEditing = false;
             bio.ReadOnly = true;
             btnEditProfile.Text = "Edit Profile";
@@ -230,7 +230,7 @@ namespace Activity_7
 
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout", 
+            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 // Clear session data
@@ -238,7 +238,7 @@ namespace Activity_7
                 Session.Username = string.Empty;
                 Session.Bio = string.Empty;
                 Session.ProfilePicPath = string.Empty;
-                
+
                 this.Hide();
                 Login loginForm = new Login();
                 loginForm.ShowDialog();
@@ -251,41 +251,56 @@ namespace Activity_7
             LoadUserData();
         }
 
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Profile link clicked - already on profile page, do nothing
-        }
-
-        private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        private void myAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             // Already on my account page, do nothing
         }
 
-        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void logout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
             btnLogout_Click(sender, e);
         }
 
-        private void tabPage1_Click(object sender, EventArgs e)
+        private void home_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Tab page clicked - refresh posts if needed
-            LoadUserData();
+            this.Hide();
+            Homepage homepageForm = new Homepage();
+            homepageForm.ShowDialog();
+            this.Close();
         }
 
-        private void tabPage2_Click(object sender, EventArgs e)
+        private void explore_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Activity tab clicked - refresh activity if needed
-            LoadUserData();
+            this.Hide();
+            Homepage homepageForm = new Homepage();
+            homepageForm.ShowDialog();
+            this.Close();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void categories_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // My Account label clicked - do nothing
+            this.Hide();
+            Categories categoriesForm = new Categories();
+            categoriesForm.ShowDialog();
+            this.Close();
         }
 
-        private void linkLabel14_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        private void post_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-           
+            this.Hide();
+            Upload uploadForm = new Upload();
+            uploadForm.ShowDialog();
+            this.Close();
+        }
+
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Already on profile page, do nothing
+        }
+
+        private void linkLabel11_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            btnLogout_Click(sender, e);
         }
 
         protected override void OnResize(EventArgs e)
