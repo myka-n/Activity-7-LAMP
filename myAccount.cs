@@ -158,11 +158,25 @@ namespace Activity_7
                 {
                     try
                     {
-                        // Create a directory for profile pictures if it doesn't exist
-                        string profilePicsDir = Path.Combine(Application.StartupPath, "ProfilePics");
+                        // Create base uploads directory if it doesn't exist
+                        string baseUploadsDir = @"C:\EDP\LAMP\uploads";
+                        if (!Directory.Exists(baseUploadsDir))
+                        {
+                            Directory.CreateDirectory(baseUploadsDir);
+                        }
+
+                        // Create profile pictures directory
+                        string profilePicsDir = Path.Combine(baseUploadsDir, "profilepics");
                         if (!Directory.Exists(profilePicsDir))
                         {
                             Directory.CreateDirectory(profilePicsDir);
+                        }
+
+                        // Create artwork images directory
+                        string artworkDir = Path.Combine(baseUploadsDir, "artworkimages");
+                        if (!Directory.Exists(artworkDir))
+                        {
+                            Directory.CreateDirectory(artworkDir);
                         }
 
                         // Generate a unique filename
@@ -271,8 +285,7 @@ namespace Activity_7
 
         private void linkLabel14_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            // Show post settings menu
-            postSettings.Show(linkLabel14, new Point(0, linkLabel14.Height));
+           
         }
 
         protected override void OnResize(EventArgs e)
