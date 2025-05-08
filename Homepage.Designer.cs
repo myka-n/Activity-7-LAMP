@@ -44,7 +44,7 @@
             linkLabel7 = new LinkLabel();
             textBox1 = new TextBox();
             ProfileMenuStrip = new ContextMenuStrip(components);
-            MyAccountToolStripMenuItem = new ToolStripMenuItem();
+            myAccountToolStripMenuItem = new ToolStripMenuItem();
             settingsToolStripMenuItem = new ToolStripMenuItem();
             logoutToolStripMenuItem = new ToolStripMenuItem();
             label1 = new Label();
@@ -290,6 +290,7 @@
             panel2.Name = "panel2";
             panel2.Size = new Size(601, 28);
             panel2.TabIndex = 6;
+            panel2.Paint += panel2_Paint;
             // 
             // flowLayoutPanel2
             // 
@@ -343,28 +344,28 @@
             // 
             // ProfileMenuStrip
             // 
-            ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { MyAccountToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
+            ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
             ProfileMenuStrip.Name = "contextMenuStrip1";
-            ProfileMenuStrip.Size = new Size(181, 92);
+            ProfileMenuStrip.Size = new Size(140, 70);
             // 
             // myAccountToolStripMenuItem
             // 
-            MyAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
-            MyAccountToolStripMenuItem.Size = new Size(180, 22);
-            MyAccountToolStripMenuItem.Text = "My Account";
-            MyAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
+            myAccountToolStripMenuItem.Name = "myAccountToolStripMenuItem";
+            myAccountToolStripMenuItem.Size = new Size(139, 22);
+            myAccountToolStripMenuItem.Text = "My Account";
+            myAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click_1;
             // 
             // settingsToolStripMenuItem
             // 
             settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            settingsToolStripMenuItem.Size = new Size(180, 22);
+            settingsToolStripMenuItem.Size = new Size(139, 22);
             settingsToolStripMenuItem.Text = "Settings";
             settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
             // 
             // logoutToolStripMenuItem
             // 
             logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            logoutToolStripMenuItem.Size = new Size(180, 22);
+            logoutToolStripMenuItem.Size = new Size(139, 22);
             logoutToolStripMenuItem.Text = "Logout";
             logoutToolStripMenuItem.Click += logoutToolStripMenuItem_Click;
             // 

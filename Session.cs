@@ -13,7 +13,12 @@ namespace Activity_7
         public static string Email { get; set; }
         public static string ProfilePicPath { get; set; }
         public static string Bio { get; set; } 
-        public static bool RememberMe { get; set; } 
+        public static bool RememberMe { get; set; }
+
+        internal static void Clear()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
 

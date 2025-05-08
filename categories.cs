@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -13,52 +7,53 @@ namespace Activity_7
 {
     public partial class Categories : Form
     {
-        MySqlConnection conn;
-
         public Categories()
         {
             InitializeComponent();
             this.Load += CategoriesPage_Load;
-            conn = new MySqlConnection("server=localhost;user id=root;password=mykz;database=zeereal_artspace;");
         }
 
         private void CategoriesPage_Load(object sender, EventArgs e)
         {
-            LoadCategories();
+            try
+            {
+                LoadCategories();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error initializing form: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadCategories()
         {
-            try
+            string query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
+            
+            DatabaseManager.ExecuteQuery(query, null, reader =>
             {
-                conn.Open();
-                string query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
-                MySqlCommand cmd = new MySqlCommand(query, conn);
-
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+                flowlayoutcategories.Controls.Clear();
+                while (reader.Read())
                 {
-                    flowlayoutcategories.Controls.Clear(); // Clear previous category buttons
-
-                    while (reader.Read())
-                    {
-                        Button btn = new Button();
-                        btn.Width = 100;
-                        btn.Height = 40;
-                        btn.Text = reader.GetString("cat_name");
-                        btn.Tag = reader.GetInt32("cat_id");
-                        btn.Click += CategoryButton_Click;
-                        flowlayoutcategories.Controls.Add(btn);
-                    }
+                    var btn = CreateCategoryButton(
+                        reader.GetString("cat_name"),
+                        reader.GetInt32("cat_id")
+                    );
+                    flowlayoutcategories.Controls.Add(btn);
                 }
-            }
-            catch (Exception ex)
+            });
+        }
+
+        private Button CreateCategoryButton(string categoryName, int categoryId)
+        {
+            var btn = new Button
             {
-                MessageBox.Show("Error loading categories: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+                Width = 100,
+                Height = 40,
+                Text = categoryName,
+                Tag = categoryId
+            };
+            btn.Click += CategoryButton_Click;
+            return btn;
         }
 
         private void CategoryButton_Click(object sender, EventArgs e)
@@ -67,77 +62,96 @@ namespace Activity_7
             {
                 LoadArtworksByCategory(categoryId);
             }
-            else
-            {
-                MessageBox.Show("Invalid category button or missing category ID.");
-            }
         }
 
         private void LoadArtworksByCategory(int categoryId)
         {
+            string query = @"
+                SELECT 
+                    a.art_id,
+                    a.art_title AS Title,
+                    a.art_description AS Description,
+                    a.image_path AS ImagePath,
+                    a.created_at AS CreatedAt,
+                    u.user_id AS ArtistId,
+                    u.username AS ArtistName,
+                    c.cat_id AS CategoryId,
+                    c.cat_name AS CategoryName
+                FROM artworks a
+                JOIN users u ON a.user_id = u.user_id
+                JOIN artwork_categories ac ON a.art_id = ac.art_id
+                JOIN categories c ON ac.cat_id = c.cat_id
+                WHERE ac.cat_id = @categoryId
+                ORDER BY a.created_at DESC";
+
             bool hasData = false;
 
-            try
+            DatabaseManager.ExecuteQuery(query, cmd =>
             {
-                conn.Open();
-                string query = @"
-                    SELECT 
-                        a.art_title AS Title,
-                        u.username AS ArtistName,
-                        u.user_id AS ArtistId, 
-                        a.created_at AS CreatedAt
-                    FROM artworks a
-                    JOIN artwork_categories ac ON a.art_id = ac.art_id
-                    JOIN users u ON a.user_id = u.user_id
-                    WHERE ac.cat_id = @categoryId
-                    ORDER BY a.created_at DESC;
-                ";
-
-                MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@categoryId", categoryId);
-
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+            }, reader =>
+            {
+                flowlayoutartworks.Controls.Clear();
+                while (reader.Read())
                 {
-                    flowlayoutartworks.Controls.Clear(); // Clear previous artworks
-
-                    while (reader.Read())
+                    hasData = true;
+                    var artwork = new Artwork
                     {
-                        hasData = true;
-
-                        Panel artPanel = CreateArtworkPanel(reader);
-                        flowlayoutartworks.Controls.Add(artPanel);
-                    }
+                        ArtworkId = reader.GetInt32("art_id"),
+                        Title = reader.GetString("Title"),
+                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
+                        ImagePath = reader.GetString("ImagePath"),
+                        CreatedAt = reader.GetDateTime("CreatedAt"),
+                        ArtistId = reader.GetInt32("ArtistId"),
+                        ArtistName = reader.GetString("ArtistName"),
+                        CategoryId = reader.GetInt32("CategoryId"),
+                        CategoryName = reader.GetString("CategoryName")
+                    };
+                    flowlayoutartworks.Controls.Add(CreateArtworkPanel(artwork));
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading artworks: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
+            });
 
-                if (!hasData)
-                {
-                    MessageBox.Show("No artworks found under this category.", "No Artworks", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+            if (!hasData)
+            {
+                MessageBox.Show("No artworks found under this category.", "No Artworks", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
-        private Panel CreateArtworkPanel(MySqlDataReader reader)
+        private Panel CreateArtworkPanel(Artwork artwork)
         {
-            Panel artPanel = new Panel
+            var artPanel = new Panel
             {
                 Width = 300,
-                Height = 150,
+                Height = 250,
                 BackColor = Color.White,
                 BorderStyle = BorderStyle.FixedSingle,
                 Margin = new Padding(10)
             };
 
-            Label lblTitle = new Label
+            var pictureBox = new PictureBox
             {
-                Text = reader.GetString("Title"),
+                Width = 280,
+                Height = 150,
+                Dock = DockStyle.Top,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Padding = new Padding(10)
+            };
+
+            try
+            {
+                if (System.IO.File.Exists(artwork.ImagePath))
+                {
+                    pictureBox.Image = Image.FromFile(artwork.ImagePath);
+                }
+            }
+            catch
+            {
+                pictureBox.Image = null;
+            }
+
+            var lblTitle = new Label
+            {
+                Text = artwork.Title,
                 Font = new Font("Segoe UI", 12, FontStyle.Bold),
                 Dock = DockStyle.Top,
                 Height = 30,
@@ -145,22 +159,22 @@ namespace Activity_7
                 ForeColor = Color.Black
             };
 
-            Label lblArtist = new Label
+            var lblArtist = new Label
             {
-                Text = "by " + reader.GetString("ArtistName"),
+                Text = "by " + artwork.ArtistName,
                 Font = new Font("Segoe UI", 10, FontStyle.Underline),
                 Dock = DockStyle.Top,
                 Height = 25,
                 Padding = new Padding(10, 0, 10, 0),
                 ForeColor = Color.Blue,
                 Cursor = Cursors.Hand,
-                Tag = reader.GetInt32("ArtistId") // store artistId now!
+                Tag = artwork.ArtistId
             };
             lblArtist.Click += ArtistLabel_Click;
 
-            Label lblDate = new Label
+            var lblDate = new Label
             {
-                Text = reader.GetDateTime("CreatedAt").ToString("MMMM dd, yyyy"),
+                Text = artwork.CreatedAt.ToString("MMMM dd, yyyy"),
                 Font = new Font("Segoe UI", 9, FontStyle.Regular),
                 Dock = DockStyle.Top,
                 Height = 20,
@@ -171,6 +185,7 @@ namespace Activity_7
             artPanel.Controls.Add(lblDate);
             artPanel.Controls.Add(lblArtist);
             artPanel.Controls.Add(lblTitle);
+            artPanel.Controls.Add(pictureBox);
 
             return artPanel;
         }
@@ -179,14 +194,14 @@ namespace Activity_7
         {
             if (sender is Label artistLabel && artistLabel.Tag is int artistId)
             {
-                ArtistProfileForm artistProfileForm = new ArtistProfileForm(artistId);
+                var artistProfileForm = new ArtistProfileForm(artistId);
                 artistProfileForm.Show();
             }
         }
 
         private void SearchLinkLabel_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string keyword = searchtextbox.Text.Trim();  // Assuming searchTextBox is the TextBox control
+            string keyword = searchtextbox.Text.Trim();
             if (!string.IsNullOrEmpty(keyword))
             {
                 SearchAllArtworks(keyword);
@@ -199,53 +214,49 @@ namespace Activity_7
 
         private void SearchAllArtworks(string keyword)
         {
-            try
-            {
-                conn.Open();
-                string query = @"
+            string query = @"
                 SELECT 
+                    a.art_id,
                     a.art_title AS Title,
-                    u.username AS ArtistName,
-                    u.user_id AS ArtistId, 
-                    a.created_at AS CreatedAt
+                    a.art_description AS Description,
+                    a.image_path AS ImagePath,
+                    a.created_at AS CreatedAt,
+                    u.user_id AS ArtistId,
+                    u.username AS ArtistName
                 FROM artworks a
                 JOIN users u ON a.user_id = u.user_id
                 WHERE a.art_title LIKE @keyword
-                ORDER BY a.created_at DESC;
-                ";
+                ORDER BY a.created_at DESC";
 
-                MySqlCommand cmd = new MySqlCommand(query, conn);
+            bool hasData = false;
+
+            DatabaseManager.ExecuteQuery(query, cmd =>
+            {
                 cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
-
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+            }, reader =>
+            {
+                flowlayoutartworks.Controls.Clear();
+                while (reader.Read())
                 {
-                    flowlayoutartworks.Controls.Clear(); // Clear previous artworks
-
-                    bool hasData = false;
-
-                    while (reader.Read())
+                    hasData = true;
+                    var artwork = new Artwork
                     {
-                        hasData = true;
-
-                        Panel artPanel = CreateArtworkPanel(reader);
-                        flowlayoutartworks.Controls.Add(artPanel);
-                    }
-
-                    if (!hasData)
-                    {
-                        MessageBox.Show("No artworks matched your search.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    }
+                        ArtworkId = reader.GetInt32("art_id"),
+                        Title = reader.GetString("Title"),
+                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
+                        ImagePath = reader.GetString("ImagePath"),
+                        CreatedAt = reader.GetDateTime("CreatedAt"),
+                        ArtistId = reader.GetInt32("ArtistId"),
+                        ArtistName = reader.GetString("ArtistName")
+                    };
+                    flowlayoutartworks.Controls.Add(CreateArtworkPanel(artwork));
                 }
-            }
-            catch (Exception ex)
+            });
+
+            if (!hasData)
             {
-                MessageBox.Show("Error searching artworks: " + ex.Message, "Database Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            finally
-            {
-                conn.Close();
+                MessageBox.Show("No artworks matched your search.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
-
     }
 }

@@ -1,6 +1,6 @@
-﻿namespace Activity_7
+namespace Activity_7
 {
-    partial class Upload
+    partial class EditArtworkForm
     {
         /// <summary>
         /// Required designer variable.
@@ -14,10 +14,10 @@
         private System.Windows.Forms.TextBox txtDescription;
         private System.Windows.Forms.Label lblCategory;
         private System.Windows.Forms.ComboBox cmbCategory;
-        private System.Windows.Forms.PictureBox previewBox;
-        private System.Windows.Forms.Button btnSelectImage;
-        private System.Windows.Forms.Button btnUpload;
-        private System.Windows.Forms.Button btnCancel;
+        private System.Windows.Forms.PictureBox pictureBox;
+        private System.Windows.Forms.Button changeImageButton;
+        private System.Windows.Forms.Button saveButton;
+        private System.Windows.Forms.Button cancelButton;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -46,11 +46,11 @@
             this.txtDescription = new System.Windows.Forms.TextBox();
             this.lblCategory = new System.Windows.Forms.Label();
             this.cmbCategory = new System.Windows.Forms.ComboBox();
-            this.previewBox = new System.Windows.Forms.PictureBox();
-            this.btnSelectImage = new System.Windows.Forms.Button();
-            this.btnUpload = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.previewBox)).BeginInit();
+            this.pictureBox = new System.Windows.Forms.PictureBox();
+            this.changeImageButton = new System.Windows.Forms.Button();
+            this.saveButton = new System.Windows.Forms.Button();
+            this.cancelButton = new System.Windows.Forms.Button();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).BeginInit();
             this.SuspendLayout();
             // 
             // lblTitle
@@ -110,77 +110,80 @@
             this.cmbCategory.Size = new System.Drawing.Size(300, 29);
             this.cmbCategory.TabIndex = 5;
             // 
-            // previewBox
+            // pictureBox
             // 
-            this.previewBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.previewBox.Location = new System.Drawing.Point(400, 20);
-            this.previewBox.Name = "previewBox";
-            this.previewBox.Size = new System.Drawing.Size(300, 300);
-            this.previewBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.previewBox.TabIndex = 6;
-            this.previewBox.TabStop = false;
+            this.pictureBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pictureBox.Location = new System.Drawing.Point(340, 20);
+            this.pictureBox.Name = "pictureBox";
+            this.pictureBox.Size = new System.Drawing.Size(300, 300);
+            this.pictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.pictureBox.TabIndex = 6;
+            this.pictureBox.TabStop = false;
             // 
-            // btnSelectImage
+            // changeImageButton
             // 
-            this.btnSelectImage.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            this.btnSelectImage.ForeColor = System.Drawing.Color.White;
-            this.btnSelectImage.Location = new System.Drawing.Point(400, 330);
-            this.btnSelectImage.Name = "btnSelectImage";
-            this.btnSelectImage.Size = new System.Drawing.Size(120, 35);
-            this.btnSelectImage.TabIndex = 7;
-            this.btnSelectImage.Text = "Select Image";
-            this.btnSelectImage.UseVisualStyleBackColor = false;
-            this.btnSelectImage.Click += new System.EventHandler(this.BtnSelectImage_Click);
+            this.changeImageButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.changeImageButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.changeImageButton.ForeColor = System.Drawing.Color.White;
+            this.changeImageButton.Location = new System.Drawing.Point(340, 330);
+            this.changeImageButton.Name = "changeImageButton";
+            this.changeImageButton.Size = new System.Drawing.Size(140, 35);
+            this.changeImageButton.TabIndex = 7;
+            this.changeImageButton.Text = "Change Image";
+            this.changeImageButton.UseVisualStyleBackColor = false;
+            this.changeImageButton.Click += new System.EventHandler(this.ChangeImageButton_Click);
             // 
-            // btnUpload
+            // saveButton
             // 
-            this.btnUpload.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
-            this.btnUpload.ForeColor = System.Drawing.Color.White;
-            this.btnUpload.Location = new System.Drawing.Point(20, 320);
-            this.btnUpload.Name = "btnUpload";
-            this.btnUpload.Size = new System.Drawing.Size(120, 35);
-            this.btnUpload.TabIndex = 8;
-            this.btnUpload.Text = "Upload";
-            this.btnUpload.UseVisualStyleBackColor = false;
-            this.btnUpload.Click += new System.EventHandler(this.BtnUpload_Click);
+            this.saveButton.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(122)))), ((int)(((byte)(204)))));
+            this.saveButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.saveButton.ForeColor = System.Drawing.Color.White;
+            this.saveButton.Location = new System.Drawing.Point(20, 330);
+            this.saveButton.Name = "saveButton";
+            this.saveButton.Size = new System.Drawing.Size(140, 35);
+            this.saveButton.TabIndex = 8;
+            this.saveButton.Text = "Save";
+            this.saveButton.UseVisualStyleBackColor = false;
+            this.saveButton.Click += new System.EventHandler(this.SaveButton_Click);
             // 
-            // btnCancel
+            // cancelButton
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.Gray;
-            this.btnCancel.ForeColor = System.Drawing.Color.White;
-            this.btnCancel.Location = new System.Drawing.Point(150, 320);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(120, 35);
-            this.btnCancel.TabIndex = 9;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.BtnCancel_Click);
+            this.cancelButton.BackColor = System.Drawing.Color.Gray;
+            this.cancelButton.Font = new System.Drawing.Font("Segoe UI", 12F);
+            this.cancelButton.ForeColor = System.Drawing.Color.White;
+            this.cancelButton.Location = new System.Drawing.Point(180, 330);
+            this.cancelButton.Name = "cancelButton";
+            this.cancelButton.Size = new System.Drawing.Size(140, 35);
+            this.cancelButton.TabIndex = 9;
+            this.cancelButton.Text = "Cancel";
+            this.cancelButton.UseVisualStyleBackColor = false;
+            this.cancelButton.Click += new System.EventHandler(this.CancelButton_Click);
             // 
-            // Upload
+            // EditArtworkForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 600);
+            this.ClientSize = new System.Drawing.Size(664, 381);
             this.Controls.Add(this.lblTitle);
             this.Controls.Add(this.txtTitle);
             this.Controls.Add(this.lblDescription);
             this.Controls.Add(this.txtDescription);
             this.Controls.Add(this.lblCategory);
             this.Controls.Add(this.cmbCategory);
-            this.Controls.Add(this.previewBox);
-            this.Controls.Add(this.btnSelectImage);
-            this.Controls.Add(this.btnUpload);
-            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.pictureBox);
+            this.Controls.Add(this.changeImageButton);
+            this.Controls.Add(this.saveButton);
+            this.Controls.Add(this.cancelButton);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "Upload";
+            this.Name = "EditArtworkForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Upload Artwork";
-            ((System.ComponentModel.ISupportInitialize)(this.previewBox)).EndInit();
+            this.Text = "Edit Artwork";
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
         #endregion
     }
-}
+} 

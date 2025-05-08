@@ -119,13 +119,6 @@ namespace Activity_7
             artworkPageForm.ShowDialog();
         }
 
-        private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            this.Hide();
-            MyAccount my_AccountForm = new MyAccount();
-            my_AccountForm.ShowDialog();
-        }
-
         private void likesToolStripMenuItem_Click(object sender, EventArgs e)
         {
 
@@ -146,6 +139,18 @@ namespace Activity_7
             this.Hide();
             Login loginForm = new Login();
             loginForm.ShowDialog();
+        }
+
+        private void panel2_Paint(object sender, PaintEventArgs e)
+        {
+
+        }
+
+        private void myAccountToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
+            MyAccount myAccount = new MyAccount();
+            myAccount.ShowDialog();
+            this.Hide();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
@@ -8,129 +7,170 @@ namespace Activity_7
 {
     public partial class ArtistProfileForm : Form
     {
-        private int artistId;
-        private MySqlConnection conn;
+        private readonly int artistId;
 
         public ArtistProfileForm(int artistId)
         {
             InitializeComponent();
             this.artistId = artistId;
-            conn = new MySqlConnection("server=localhost;user id=root;password=mykz;database=zeereal_artspace;");
-            this.Load += ArtistProfile_Load;
+            this.Load += ArtistProfileForm_Load;
         }
 
-        private void ArtistProfile_Load(object sender, EventArgs e)
+        private void ArtistProfileForm_Load(object sender, EventArgs e)
         {
-            LoadArtistProfile();
-            LoadArtistArtworks();
+            try
+            {
+                LoadArtistProfile();
+                LoadArtistArtworks();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading artist profile: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void LoadArtistProfile()
         {
-            try
+            string query = @"
+                SELECT 
+                    u.username,
+                    u.profile_pic,
+                    u.bio
+                FROM users u
+                WHERE u.user_id = @artistId";
+
+            DatabaseManager.ExecuteQuery(query, cmd =>
             {
-                conn.Open();
-                string query = "SELECT username, bio, profile_pic FROM users WHERE user_id = @artistId";
-
-                MySqlCommand cmd = new MySqlCommand(query, conn);
                 cmd.Parameters.AddWithValue("@artistId", artistId);
-
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+            }, reader =>
+            {
+                if (reader.Read())
                 {
-                    if (reader.Read())
-                    {
-                        lblArtistName.Text = reader.GetString("username");
-                        txtBio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "No bio available." : reader.GetString("bio");
+                    lblUsername.Text = reader.GetString("username");
+                    txtBio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString("bio");
 
-                        if (!reader.IsDBNull(reader.GetOrdinal("profile_pic")))
-                        {
-                            byte[] imgData = (byte[])reader["profile_pic"];
-                            using (var ms = new System.IO.MemoryStream(imgData))
-                            {
-                                pictureBoxProfile.Image = Image.FromStream(ms);
-                            }
-                        }
-                        else
-                        {
-                            pictureBoxProfile.Image = Properties.Resources.Untitled58_20221225121714; // fallback picture
-                        }
+                    string profilePicPath = reader.IsDBNull(reader.GetOrdinal("profile_pic")) ? null : reader.GetString("profile_pic");
+                    if (!string.IsNullOrEmpty(profilePicPath) && System.IO.File.Exists(profilePicPath))
+                    {
+                        pictureBoxProfile.Image = Image.FromFile(profilePicPath);
                     }
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading artist profile: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            });
         }
 
         private void LoadArtistArtworks()
         {
-            try
-            {
-                conn.Open();
-                string query = @"
-                    SELECT art_title, created_at
-                    FROM artworks
-                    WHERE user_id = @artistId
-                    ORDER BY created_at DESC;
-                ";
+            string query = @"
+                SELECT 
+                    a.art_id,
+                    a.art_title AS Title,
+                    a.art_description AS Description,
+                    a.image_path AS ImagePath,
+                    a.created_at AS CreatedAt,
+                    u.user_id AS ArtistId,
+                    u.username AS ArtistName,
+                    c.cat_id AS CategoryId,
+                    c.cat_name AS CategoryName
+                FROM artworks a
+                JOIN users u ON a.user_id = u.user_id
+                LEFT JOIN artwork_categories ac ON a.art_id = ac.art_id
+                LEFT JOIN categories c ON ac.cat_id = c.cat_id
+                WHERE a.user_id = @artistId
+                ORDER BY a.created_at DESC";
 
-                MySqlCommand cmd = new MySqlCommand(query, conn);
+            DatabaseManager.ExecuteQuery(query, cmd =>
+            {
                 cmd.Parameters.AddWithValue("@artistId", artistId);
-
-                using (MySqlDataReader reader = cmd.ExecuteReader())
+            }, reader =>
+            {
+                flowLayoutArtworks.Controls.Clear();
+                while (reader.Read())
                 {
-                    flowLayoutArtworks.Controls.Clear();
-
-                    while (reader.Read())
+                    var artwork = new Artwork
                     {
-                        Panel artworkPanel = new Panel
-                        {
-                            Width = 250,
-                            Height = 100,
-                            BorderStyle = BorderStyle.FixedSingle,
-                            BackColor = Color.White,
-                            Margin = new Padding(5)
-                        };
-
-                        Label lblTitle = new Label
-                        {
-                            Text = reader.GetString("art_title"),
-                            Font = new Font("Segoe UI", 10, FontStyle.Bold),
-                            Dock = DockStyle.Top,
-                            Height = 30,
-                            Padding = new Padding(5)
-                        };
-
-                        Label lblDate = new Label
-                        {
-                            Text = reader.GetDateTime("created_at").ToString("MMMM dd, yyyy"),
-                            Font = new Font("Segoe UI", 9),
-                            Dock = DockStyle.Bottom,
-                            Height = 20,
-                            Padding = new Padding(5)
-                        };
-
-                        artworkPanel.Controls.Add(lblDate);
-                        artworkPanel.Controls.Add(lblTitle);
-                        flowLayoutArtworks.Controls.Add(artworkPanel);
-                    }
+                        ArtworkId = reader.GetInt32("art_id"),
+                        Title = reader.GetString("Title"),
+                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
+                        ImagePath = reader.GetString("ImagePath"),
+                        CreatedAt = reader.GetDateTime("CreatedAt"),
+                        ArtistId = reader.GetInt32("ArtistId"),
+                        ArtistName = reader.GetString("ArtistName"),
+                        CategoryId = reader.IsDBNull(reader.GetOrdinal("CategoryId")) ? null : (int?)reader.GetInt32("CategoryId"),
+                        CategoryName = reader.IsDBNull(reader.GetOrdinal("CategoryName")) ? null : reader.GetString("CategoryName")
+                    };
+                    flowLayoutArtworks.Controls.Add(CreateArtworkPanel(artwork));
                 }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error loading artist artworks: " + ex.Message);
-            }
-            finally
-            {
-                conn.Close();
-            }
+            });
         }
 
-       
+        private Panel CreateArtworkPanel(Artwork artwork)
+        {
+            var artPanel = new Panel
+            {
+                Width = 300,
+                Height = 250,
+                BackColor = Color.White,
+                BorderStyle = BorderStyle.FixedSingle,
+                Margin = new Padding(10)
+            };
+
+            var pictureBox = new PictureBox
+            {
+                Width = 280,
+                Height = 150,
+                Dock = DockStyle.Top,
+                SizeMode = PictureBoxSizeMode.Zoom,
+                Padding = new Padding(10)
+            };
+
+            try
+            {
+                if (System.IO.File.Exists(artwork.ImagePath))
+                {
+                    pictureBox.Image = Image.FromFile(artwork.ImagePath);
+                }
+            }
+            catch
+            {
+                pictureBox.Image = null;
+            }
+
+            var lblTitle = new Label
+            {
+                Text = artwork.Title,
+                Font = new Font("Segoe UI", 12, FontStyle.Bold),
+                Dock = DockStyle.Top,
+                Height = 30,
+                Padding = new Padding(10, 10, 10, 0),
+                ForeColor = Color.Black
+            };
+
+            var lblCategory = new Label
+            {
+                Text = artwork.CategoryName ?? "Uncategorized",
+                Font = new Font("Segoe UI", 10),
+                Dock = DockStyle.Top,
+                Height = 25,
+                Padding = new Padding(10, 0, 10, 0),
+                ForeColor = Color.DarkGray
+            };
+
+            var lblDate = new Label
+            {
+                Text = artwork.CreatedAt.ToString("MMMM dd, yyyy"),
+                Font = new Font("Segoe UI", 9),
+                Dock = DockStyle.Top,
+                Height = 20,
+                Padding = new Padding(10, 0, 10, 10),
+                ForeColor = Color.DarkGray
+            };
+
+            artPanel.Controls.Add(lblDate);
+            artPanel.Controls.Add(lblCategory);
+            artPanel.Controls.Add(lblTitle);
+            artPanel.Controls.Add(pictureBox);
+
+            return artPanel;
+        }
     }
 }

@@ -1,153 +1,149 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Drawing.Printing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 using System.Configuration;
-using System.IO;
 
 namespace Activity_7
 {
     public partial class MyAccount : Form
     {
-        private bool isEditing = false;
-        private string originalBio;
-        private string originalUsername;
-        private string originalProfilePicPath;
+        private string profilePicsDirectory = Path.Combine(Application.StartupPath, "ProfilePics");
 
         public MyAccount()
         {
             InitializeComponent();
-            this.FormBorderStyle = FormBorderStyle.None;
-            this.StartPosition = FormStartPosition.CenterScreen;
-            SetupResponsiveDesign();
-            LoadUserData();
+            Directory.CreateDirectory(profilePicsDirectory);
+            InitializeProfileData();
+            LoadUserArtworks();
+            btnEditProfile.Click += BtnEdit_Click;
+
+            // Set up navigation
+            linkLabel1.LinkClicked += Home_LinkClicked;
+            linkLabel2.LinkClicked += Explore_LinkClicked;
+            linkLabel3.LinkClicked += Categories_LinkClicked;
+            linkLabel4.LinkClicked += Post_LinkClicked;
+            profile.LinkClicked += Profile_LinkClicked;
+            linkLabel7.LinkClicked += Search_LinkClicked;
+
+            // Set up menu items
+            myAccountToolStripMenuItem.Click += myAccountToolStripMenuItem_Click;
+            settingsToolStripMenuItem.Click += settingsToolStripMenuItem_Click;
+            logoutToolStripMenuItem.Click += logoutToolStripMenuItem_Click;
         }
 
-        private void SetupResponsiveDesign()
-        {
-            // Make the form resizable
-            this.MinimumSize = new Size(618, 788);
-
-            // Set up anchor points for controls
-            profilepic.Anchor = AnchorStyles.Top | AnchorStyles.Left;
-            username.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-            bio.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
-
-            // Set up the profile picture
-            profilepic.SizeMode = PictureBoxSizeMode.Zoom;
-            profilepic.BorderStyle = BorderStyle.FixedSingle;
-
-            // Style the bio textbox
-            bio.Multiline = true;
-            bio.ScrollBars = ScrollBars.Vertical;
-            bio.Font = new Font("Segoe UI", 10);
-
-            // Style the username label
-            username.Font = new Font("Segoe UI", 12, FontStyle.Bold);
-
-            // Add hover effects for buttons
-            foreach (Control control in this.Controls)
-            {
-                if (control is Button)
-                {
-                    Button button = (Button)control;
-                    button.FlatStyle = FlatStyle.Flat;
-                    button.FlatAppearance.BorderSize = 0;
-                    button.BackColor = Color.FromArgb(0, 122, 204);
-                    button.ForeColor = Color.White;
-                    button.Font = new Font("Segoe UI", 9, FontStyle.Bold);
-                    button.Cursor = Cursors.Hand;
-
-                    // Add hover effect
-                    button.MouseEnter += (s, e) => button.BackColor = Color.FromArgb(0, 102, 184);
-                    button.MouseLeave += (s, e) => button.BackColor = Color.FromArgb(0, 122, 204);
-                }
-            }
-        }
-
-        private void LoadUserData()
-        {
-            username.Text = Session.Username;
-            bio.Text = Session.Bio;
-            originalBio = Session.Bio;
-            originalUsername = Session.Username;
-            originalProfilePicPath = Session.ProfilePicPath;
-
-            if (!string.IsNullOrEmpty(Session.ProfilePicPath))
-            {
-                try
-                {
-                    profilepic.ImageLocation = Session.ProfilePicPath;
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Error loading profile picture: " + ex.Message);
-                }
-            }
-        }
-
-        private void btnEditProfile_Click(object sender, EventArgs e)
-        {
-            isEditing = !isEditing;
-            if (isEditing)
-            {
-                // Enable editing
-                bio.ReadOnly = false;
-                btnEditProfile.Text = "Save Changes";
-                btnCancel.Visible = true;
-            }
-            else
-            {
-                // Save changes
-                SaveChanges();
-                btnEditProfile.Text = "Edit Profile";
-                btnCancel.Visible = false;
-            }
-        }
-
-        private void SaveChanges()
+        private void InitializeProfileData()
         {
             try
             {
-                string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-                using (MySqlConnection conn = new MySqlConnection(connStr))
+                using (var connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString))
                 {
-                    conn.Open();
-                    string query = @"UPDATE users 
-                                   SET bio = @Bio, 
-                                       username = @Username,
-                                       profile_pic = @ProfilePic
-                                   WHERE user_id = @UserId";
+                    connection.Open();
+                    var command = new MySqlCommand("SELECT profile_pic, bio, username FROM users WHERE user_id = @user_id", connection);
+                    command.Parameters.AddWithValue("@user_id", Session.UserId);
 
-                    MySqlCommand cmd = new MySqlCommand(query, conn);
-                    cmd.Parameters.AddWithValue("@Bio", bio.Text);
-                    cmd.Parameters.AddWithValue("@Username", username.Text);
-                    cmd.Parameters.AddWithValue("@ProfilePic", Session.ProfilePicPath);
-                    cmd.Parameters.AddWithValue("@UserId", Session.UserId);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            // Load profile picture
+                            if (!reader.IsDBNull(reader.GetOrdinal("profile_pic")))
+                            {
+                                string profilePath = reader.GetString("profile_pic");
+                                if (File.Exists(profilePath))
+                                {
+                                    try
+                                    {
+                                        using (var image = Image.FromFile(profilePath))
+                                        {
+                                            profilepic.Image = new Bitmap(image);
+                                        }
+                                        Session.ProfilePicPath = profilePath;
+                                    }
+                                    catch
+                                    {
+                                        // Silently handle image loading errors
+                                        profilepic.Image = null;
+                                    }
+                                }
+                            }
 
-                    cmd.ExecuteNonQuery();
+                            // Load bio
+                            bio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString("bio");
 
-                    // Update session data
-                    Session.Bio = bio.Text;
-                    Session.Username = username.Text;
-
-                    MessageBox.Show("Profile updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            // Update username if changed
+                            if (!reader.IsDBNull(reader.GetOrdinal("username")))
+                            {
+                                string dbUsername = reader.GetString("username");
+                                if (dbUsername != Session.Username)
+                                {
+                                    Session.Username = dbUsername;
+                                }
+                            }
+                        }
+                    }
                 }
+
+                profile.Text = "Profile";
+                labelusername.Text = Session.Username ?? "User";
+                bio.ReadOnly = true;
+                btnEditProfile.Visible = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Error updating profile: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Only show error for unexpected database errors
+                if (!ex.Message.Contains("null"))
+                {
+                    MessageBox.Show($"Error loading profile data: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
-        private void btnChangeProfilePic_Click(object sender, EventArgs e)
+        private void Home_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            var homepage = new Homepage();
+            homepage.FormClosed += (s, args) => this.Close();
+            homepage.Show();
+        }
+
+        private void Explore_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            var explore = new explore();
+            explore.FormClosed += (s, args) => this.Close();
+            explore.Show();
+        }
+
+        private void Categories_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            this.Hide();
+            var categories = new Categories();
+            categories.FormClosed += (s, args) => this.Close();
+            categories.Show();
+        }
+
+        private void Post_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            var uploadForm = new Upload();
+            uploadForm.Owner = this;
+            this.Hide();
+            uploadForm.ShowDialog();
+            this.Show();
+        }
+
+        private void Profile_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            ProfileMenuStrip.Show(profile, new Point(0, profile.Height));
+        }
+
+        private void Search_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            // Implement search functionality if needed
+        }
+
+        private void logo_Click(object sender, EventArgs e)
         {
             using (OpenFileDialog openFileDialog = new OpenFileDialog())
             {
@@ -158,159 +154,262 @@ namespace Activity_7
                 {
                     try
                     {
-                        // Create base uploads directory if it doesn't exist
-                        string baseUploadsDir = @"C:\EDP\LAMP\uploads";
-                        if (!Directory.Exists(baseUploadsDir))
+                        string newFileName = $"profile_{Session.UserId}_{DateTime.Now.Ticks}{Path.GetExtension(openFileDialog.FileName)}";
+                        string newPath = Path.Combine(profilePicsDirectory, newFileName);
+
+                        // Delete old profile picture if it exists
+                        if (!string.IsNullOrEmpty(Session.ProfilePicPath) && File.Exists(Session.ProfilePicPath))
                         {
-                            Directory.CreateDirectory(baseUploadsDir);
+                            try
+                            {
+                                File.Delete(Session.ProfilePicPath);
+                            }
+                            catch { /* Ignore deletion errors */ }
                         }
 
-                        // Create profile pictures directory
-                        string profilePicsDir = Path.Combine(baseUploadsDir, "profilepics");
-                        if (!Directory.Exists(profilePicsDir))
+                        File.Copy(openFileDialog.FileName, newPath, true);
+
+                        using (var connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString))
                         {
-                            Directory.CreateDirectory(profilePicsDir);
+                            connection.Open();
+                            var command = new MySqlCommand("UPDATE users SET profile_pic = @path WHERE user_id = @user_id", connection);
+                            command.Parameters.AddWithValue("@path", newPath);
+                            command.Parameters.AddWithValue("@user_id", Session.UserId);
+                            command.ExecuteNonQuery();
                         }
 
-                        // Create artwork images directory
-                        string artworkDir = Path.Combine(baseUploadsDir, "artworkimages");
-                        if (!Directory.Exists(artworkDir))
+                        Session.ProfilePicPath = newPath;
+                        using (var image = Image.FromFile(newPath))
                         {
-                            Directory.CreateDirectory(artworkDir);
+                            profilepic.Image = new Bitmap(image);
                         }
-
-                        // Generate a unique filename
-                        string fileName = $"profile_{Session.UserId}_{DateTime.Now.Ticks}{Path.GetExtension(openFileDialog.FileName)}";
-                        string destinationPath = Path.Combine(profilePicsDir, fileName);
-
-                        // Copy the selected image to the profile pictures directory
-                        File.Copy(openFileDialog.FileName, destinationPath, true);
-
-                        // Update the profile picture
-                        profilepic.ImageLocation = destinationPath;
-                        Session.ProfilePicPath = destinationPath;
-
-                        // Update the database
-                        string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
-                        using (MySqlConnection conn = new MySqlConnection(connStr))
-                        {
-                            conn.Open();
-                            string query = "UPDATE users SET profile_pic = @ProfilePic WHERE user_id = @UserId";
-                            MySqlCommand cmd = new MySqlCommand(query, conn);
-                            cmd.Parameters.AddWithValue("@ProfilePic", destinationPath);
-                            cmd.Parameters.AddWithValue("@UserId", Session.UserId);
-                            cmd.ExecuteNonQuery();
-                        }
-
                         MessageBox.Show("Profile picture updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                     catch (Exception ex)
                     {
-                        MessageBox.Show("Error updating profile picture: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show($"Error updating profile picture: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        private void BtnEdit_Click(object sender, EventArgs e)
         {
-            // Restore original values
-            bio.Text = originalBio;
-            username.Text = originalUsername;
-            if (!string.IsNullOrEmpty(originalProfilePicPath))
+            using (var editForm = new EditProfileForm())
             {
-                profilepic.ImageLocation = originalProfilePicPath;
-            }
-
-            isEditing = false;
-            bio.ReadOnly = true;
-            btnEditProfile.Text = "Edit Profile";
-            btnCancel.Visible = false;
-        }
-
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show("Are you sure you want to logout?", "Confirm Logout",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                // Clear session data
-                Session.UserId = 0;
-                Session.Username = string.Empty;
-                Session.Bio = string.Empty;
-                Session.ProfilePicPath = string.Empty;
-
-                this.Hide();
-                Login loginForm = new Login();
-                loginForm.ShowDialog();
-                this.Close();
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    // Refresh the profile data after successful edit
+                    InitializeProfileData();
+                }
             }
         }
 
-        private void myAccount_Load(object sender, EventArgs e)
+        private void BtnSave_Click(object sender, EventArgs e)
         {
-            LoadUserData();
-        }
-
-        private void myAccount_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Already on my account page, do nothing
-        }
-
-        private void logout_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            btnLogout_Click(sender, e);
-        }
-
-        private void home_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Hide();
-            Homepage homepageForm = new Homepage();
-            homepageForm.ShowDialog();
-            this.Close();
-        }
-
-        private void explore_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Hide();
-            Homepage homepageForm = new Homepage();
-            homepageForm.ShowDialog();
-            this.Close();
-        }
-
-        private void categories_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Hide();
-            Categories categoriesForm = new Categories();
-            categoriesForm.ShowDialog();
-            this.Close();
-        }
-
-        private void post_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            this.Hide();
-            Upload uploadForm = new Upload();
-            uploadForm.ShowDialog();
-            this.Close();
-        }
-
-        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            // Already on profile page, do nothing
-        }
-
-        private void linkLabel11_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            btnLogout_Click(sender, e);
-        }
-
-        protected override void OnResize(EventArgs e)
-        {
-            base.OnResize(e);
-            // Adjust control sizes and positions based on form size
-            if (profilepic != null)
+            try
             {
-                int newSize = Math.Min(this.Width, this.Height) / 4;
-                profilepic.Size = new Size(newSize, newSize);
+                string newBio = bio.Text.Trim();
+
+                using (var connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString))
+                {
+                    connection.Open();
+                    var command = new MySqlCommand("UPDATE users SET bio = @bio WHERE user_id = @user_id", connection);
+                    command.Parameters.AddWithValue("@bio", newBio);
+                    command.Parameters.AddWithValue("@user_id", Session.UserId);
+                    command.ExecuteNonQuery();
+                }
+
+                Session.Bio = newBio;
+                MessageBox.Show("Bio updated successfully!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                bio.ReadOnly = true;
+                btnEditProfile.Visible = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error saving bio: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Already on MyAccount
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            // Optional settings logic
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            this.Hide();
+            new Login().ShowDialog();
+        }
+
+        private void LoadUserArtworks()
+        {
+            try
+            {
+                if (Session.UserId <= 0)
+                {
+                    MessageBox.Show("User session is invalid. Please log in again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
+                using (var connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString))
+                {
+                    connection.Open();
+                    var command = new MySqlCommand(@"
+                        SELECT a.art_id, a.art_title, a.art_description, a.image_path, a.created_at 
+                        FROM artworks a 
+                        WHERE a.user_id = @user_id 
+                        ORDER BY a.created_at DESC", connection);
+                    command.Parameters.AddWithValue("@user_id", Session.UserId);
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        flowLayoutArtworks.Controls.Clear();
+
+                        while (reader.Read())
+                        {
+                            try
+                            {
+                                int artId = reader.GetInt32("art_id");
+                                string title = reader.IsDBNull(reader.GetOrdinal("art_title")) ? "Untitled" : reader.GetString("art_title");
+                                string description = reader.IsDBNull(reader.GetOrdinal("art_description")) ? "" : reader.GetString("art_description");
+                                string imagePath = reader.IsDBNull(reader.GetOrdinal("image_path")) ? "" : reader.GetString("image_path");
+                                DateTime createdAt = reader.IsDBNull(reader.GetOrdinal("created_at")) ? DateTime.Now : reader.GetDateTime("created_at");
+
+                                Panel panel = new Panel
+                                {
+                                    Width = 250,
+                                    Height = 300,
+                                    Margin = new Padding(10),
+                                    BorderStyle = BorderStyle.FixedSingle,
+                                    BackColor = Color.White
+                                };
+
+                                PictureBox pictureBox = new PictureBox
+                                {
+                                    Width = 230,
+                                    Height = 200,
+                                    Location = new Point(10, 10),
+                                    SizeMode = PictureBoxSizeMode.Zoom,
+                                    BorderStyle = BorderStyle.FixedSingle
+                                };
+
+                                try
+                                {
+                                    if (!string.IsNullOrEmpty(imagePath) && File.Exists(imagePath))
+                                    {
+                                        using (var image = Image.FromFile(imagePath))
+                                        {
+                                            pictureBox.Image = new Bitmap(image);
+                                        }
+                                    }
+                                }
+                                catch
+                                {
+                                    // Silently handle image loading errors
+                                    pictureBox.Image = null;
+                                }
+
+                                Label titleLabel = new Label
+                                {
+                                    Text = title,
+                                    Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                                    Location = new Point(10, 220),
+                                    Width = 230,
+                                    Height = 20
+                                };
+
+                                Label dateLabel = new Label
+                                {
+                                    Text = createdAt.ToString("MMMM dd, yyyy"),
+                                    Font = new Font("Segoe UI", 8),
+                                    Location = new Point(10, 240),
+                                    Width = 230,
+                                    Height = 20
+                                };
+
+                                Button editButton = new Button
+                                {
+                                    Text = "Edit",
+                                    Location = new Point(10, 265),
+                                    Width = 110,
+                                    Height = 25
+                                };
+                                editButton.Click += (s, e) => EditArtwork(artId);
+
+                                Button deleteButton = new Button
+                                {
+                                    Text = "Delete",
+                                    Location = new Point(130, 265),
+                                    Width = 110,
+                                    Height = 25
+                                };
+                                deleteButton.Click += (s, e) => DeleteArtwork(artId);
+
+                                panel.Controls.Add(pictureBox);
+                                panel.Controls.Add(titleLabel);
+                                panel.Controls.Add(dateLabel);
+                                panel.Controls.Add(editButton);
+                                panel.Controls.Add(deleteButton);
+
+                                flowLayoutArtworks.Controls.Add(panel);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Log the error but continue loading other artworks
+                                Console.WriteLine($"Error loading artwork: {ex.Message}");
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading artworks: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void EditArtwork(int artId)
+        {
+            using (var editForm = new EditArtworkForm(artId))
+            {
+                if (editForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadUserArtworks(); // Refresh the artworks after edit
+                }
+            }
+        }
+
+        private void DeleteArtwork(int artId)
+        {
+            var result = MessageBox.Show("Are you sure you want to delete this artwork?", "Confirm Delete",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    using (var connection = new MySqlConnection(ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString))
+                    {
+                        connection.Open();
+                        var command = new MySqlCommand("DELETE FROM artworks WHERE art_id = @art_id AND user_id = @user_id", connection);
+                        command.Parameters.AddWithValue("@art_id", artId);
+                        command.Parameters.AddWithValue("@user_id", Session.UserId);
+                        command.ExecuteNonQuery();
+                    }
+                    LoadUserArtworks(); // Refresh the artworks after deletion
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error deleting artwork: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
     }
