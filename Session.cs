@@ -14,10 +14,17 @@ namespace Activity_7
         public static string ProfilePicPath { get; set; }
         public static string Bio { get; set; } 
         public static bool RememberMe { get; set; }
+        public static string Role { get; set; }
 
-        internal static void Clear()
+        public static void Clear()
         {
-            throw new NotImplementedException();
+            UserId = 0;
+            Username = null;
+            Email = null;
+            ProfilePicPath = null;
+            Bio = null;
+            RememberMe = false;
+            Role = null;
         }
     }
 }

@@ -79,6 +79,7 @@
             Controls.Add(lblArtistName);
             Name = "ArtistProfileForm";
             Text = "ArtistProfileForm";
+            Load += ArtistProfileForm_Load_1;
             ((System.ComponentModel.ISupportInitialize)pictureBoxProfile).EndInit();
             ResumeLayout(false);
             PerformLayout();

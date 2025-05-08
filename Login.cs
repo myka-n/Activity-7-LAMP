@@ -435,14 +435,14 @@ namespace Activity_7
                 try
                 {
                     conn.Open();
-                    string query = "SELECT user_id, username, email, password, profile_pic, bio FROM users WHERE email = @Email";
+                    string query = "SELECT user_id, username, email, password_hash, profile_pic, bio, role FROM users WHERE email = @Email AND is_active = 1";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@Email", textBox1.Text); // Email textbox
                     MySqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        string dbHashedPassword = reader["password"].ToString();
+                        string dbHashedPassword = reader["password_hash"].ToString();
                         string enteredPassword = textBox2.Text; // Password textbox
                         bool rememberMe = checkBox1.Checked; // Get the state of the checkbox
 
@@ -457,6 +457,7 @@ namespace Activity_7
                             Session.Email = reader["email"].ToString();
                             Session.ProfilePicPath = reader["profile_pic"] != DBNull.Value ? reader["profile_pic"].ToString() : "";
                             Session.Bio = reader["bio"].ToString();
+                            Session.Role = reader["role"].ToString();
                             Session.RememberMe = rememberMe; // Store RememberMe state
 
                             // Save login information if "Remember Me" is checked
@@ -472,8 +473,18 @@ namespace Activity_7
                             // Successful login
                             MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             this.Hide(); // Hide login form
-                            Homepage homepageForm = new Homepage();
-                            homepageForm.ShowDialog();
+
+                            // Show appropriate form based on user role
+                            if (Session.Role.ToLower() == "admin")
+                            {
+                                AdminDashboard adminForm = new AdminDashboard();
+                                adminForm.ShowDialog();
+                            }
+                            else
+                            {
+                                Homepage homepageForm = new Homepage();
+                                homepageForm.ShowDialog();
+                            }
                         }
                         else
                         {
@@ -482,7 +493,7 @@ namespace Activity_7
                     }
                     else
                     {
-                        MessageBox.Show("Email not found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Email not found or account is inactive.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     reader.Close(); // Close the reader.  Important!
                 }

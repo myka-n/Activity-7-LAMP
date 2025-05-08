@@ -46,7 +46,7 @@ namespace Activity_7
             {
                 if (reader.Read())
                 {
-                    lblUsername.Text = reader.GetString("username");
+                    lblArtistName.Text = reader.GetString("username");
                     txtBio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString("bio");
 
                     string profilePicPath = reader.IsDBNull(reader.GetOrdinal("profile_pic")) ? null : reader.GetString("profile_pic");
@@ -171,6 +171,11 @@ namespace Activity_7
             artPanel.Controls.Add(pictureBox);
 
             return artPanel;
+        }
+
+        private void ArtistProfileForm_Load_1(object sender, EventArgs e)
+        {
+
         }
     }
 }
