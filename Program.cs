@@ -1,7 +1,7 @@
 using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
-
+using System.IO;
 
 namespace Activity_7
 {
@@ -13,7 +13,6 @@ namespace Activity_7
         [STAThread]
         static void Main(string[] args)
         {
-            
             // Initialize application configuration
             ApplicationConfiguration.Initialize();
 
@@ -34,12 +33,20 @@ namespace Activity_7
                 using (MySqlConnection conn = new MySqlConnection(connectionString))
                 {
                     conn.Open();
-                    MessageBox.Show("Database connection successful!", "Connection Test", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    // Silent success
                 }
             }
             catch (MySqlException ex)
             {
-                MessageBox.Show($"Database connection failed:\n{ex.Message}", "Connection Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // Log error to a file instead of showing a message box
+                try
+                {
+                    File.AppendAllText("error.log", $"{DateTime.Now}: Database connection failed - {ex.Message}{Environment.NewLine}");
+                }
+                catch
+                {
+                    // Optional: silently ignore if logging also fails
+                }
                 return; // Exit the application if the connection fails
             }
 

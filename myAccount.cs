@@ -21,7 +21,6 @@ namespace Activity_7
 
             // Set up navigation
             linkLabel1.LinkClicked += Home_LinkClicked;
-            linkLabel2.LinkClicked += Explore_LinkClicked;
             linkLabel3.LinkClicked += Categories_LinkClicked;
             linkLabel4.LinkClicked += Post_LinkClicked;
             profile.LinkClicked += Profile_LinkClicked;

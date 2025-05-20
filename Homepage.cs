@@ -118,11 +118,14 @@ namespace Activity_7
 
         private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            
+        }
+
+        private void logoutToolStripMenuItem_Click_1(object sender, EventArgs e)
+        {
             Session.Clear();
             this.Hide();
             new Login().ShowDialog();
         }
-
-
     }
 }

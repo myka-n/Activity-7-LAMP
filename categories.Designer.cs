@@ -43,18 +43,17 @@
             settingsToolStripMenuItem = new ToolStripMenuItem();
             logoutToolStripMenuItem = new ToolStripMenuItem();
             panel1 = new Panel();
-            linkLabel4 = new LinkLabel();
-            linkLabel3 = new LinkLabel();
-            linkLabel2 = new LinkLabel();
-            linkLabel1 = new LinkLabel();
-            pictureBox1 = new PictureBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
+            pictureBox1 = new PictureBox();
+            linkLabel1 = new LinkLabel();
+            linkLabel3 = new LinkLabel();
+            linkLabel4 = new LinkLabel();
             flowLayoutPanel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)bindingSource1).BeginInit();
             ProfileMenuStrip.SuspendLayout();
             panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             flowLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             SuspendLayout();
             // 
             // flowLayoutPanel2
@@ -177,49 +176,28 @@
             panel1.Size = new Size(795, 49);
             panel1.TabIndex = 12;
             // 
-            // linkLabel4
+            // flowLayoutPanel1
             // 
-            linkLabel4.AutoSize = true;
-            linkLabel4.Dock = DockStyle.Top;
-            linkLabel4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel4.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel4.LinkColor = Color.Black;
-            linkLabel4.Location = new Point(216, 0);
-            linkLabel4.Name = "linkLabel4";
-            linkLabel4.Size = new Size(33, 17);
-            linkLabel4.TabIndex = 4;
-            linkLabel4.TabStop = true;
-            linkLabel4.Text = "Post";
-            linkLabel4.LinkClicked += linkLabel4_LinkClicked;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.BackColor = Color.Transparent;
+            flowLayoutPanel1.Controls.Add(pictureBox1);
+            flowLayoutPanel1.Controls.Add(linkLabel1);
+            flowLayoutPanel1.Controls.Add(linkLabel3);
+            flowLayoutPanel1.Controls.Add(linkLabel4);
+            flowLayoutPanel1.Location = new Point(16, 10);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(502, 27);
+            flowLayoutPanel1.TabIndex = 5;
             // 
-            // linkLabel3
+            // pictureBox1
             // 
-            linkLabel3.AutoSize = true;
-            linkLabel3.Dock = DockStyle.Top;
-            linkLabel3.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel3.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel3.LinkColor = Color.Black;
-            linkLabel3.Location = new Point(139, 0);
-            linkLabel3.Name = "linkLabel3";
-            linkLabel3.Size = new Size(71, 17);
-            linkLabel3.TabIndex = 3;
-            linkLabel3.TabStop = true;
-            linkLabel3.Text = "Categories";
-            linkLabel3.LinkClicked += linkLabel3_LinkClicked;
-            // 
-            // linkLabel2
-            // 
-            linkLabel2.AutoSize = true;
-            linkLabel2.Dock = DockStyle.Top;
-            linkLabel2.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel2.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel2.LinkColor = Color.Black;
-            linkLabel2.Location = new Point(81, 0);
-            linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(52, 17);
-            linkLabel2.TabIndex = 2;
-            linkLabel2.TabStop = true;
-            linkLabel2.Text = "Explore";
+            pictureBox1.Image = Properties.Resources._487992110_1648939996013765_4619232922560852750_n;
+            pictureBox1.Location = new Point(3, 3);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new Size(23, 19);
+            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
+            pictureBox1.TabIndex = 0;
+            pictureBox1.TabStop = false;
             // 
             // linkLabel1
             // 
@@ -235,29 +213,35 @@
             linkLabel1.Text = "Home";
             linkLabel1.LinkClicked += linkLabel1_LinkClicked;
             // 
-            // pictureBox1
+            // linkLabel3
             // 
-            pictureBox1.Image = Properties.Resources._487992110_1648939996013765_4619232922560852750_n;
-            pictureBox1.Location = new Point(3, 3);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(23, 19);
-            pictureBox1.SizeMode = PictureBoxSizeMode.StretchImage;
-            pictureBox1.TabIndex = 0;
-            pictureBox1.TabStop = false;
+            linkLabel3.AutoSize = true;
+            linkLabel3.Dock = DockStyle.Top;
+            linkLabel3.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            linkLabel3.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabel3.LinkColor = Color.Black;
+            linkLabel3.Location = new Point(81, 0);
+            linkLabel3.Name = "linkLabel3";
+            linkLabel3.Size = new Size(71, 17);
+            linkLabel3.TabIndex = 3;
+            linkLabel3.TabStop = true;
+            linkLabel3.Text = "Categories";
+            linkLabel3.LinkClicked += linkLabel3_LinkClicked;
             // 
-            // flowLayoutPanel1
+            // linkLabel4
             // 
-            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel1.BackColor = Color.Transparent;
-            flowLayoutPanel1.Controls.Add(pictureBox1);
-            flowLayoutPanel1.Controls.Add(linkLabel1);
-            flowLayoutPanel1.Controls.Add(linkLabel2);
-            flowLayoutPanel1.Controls.Add(linkLabel3);
-            flowLayoutPanel1.Controls.Add(linkLabel4);
-            flowLayoutPanel1.Location = new Point(16, 10);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(502, 27);
-            flowLayoutPanel1.TabIndex = 5;
+            linkLabel4.AutoSize = true;
+            linkLabel4.Dock = DockStyle.Top;
+            linkLabel4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            linkLabel4.LinkBehavior = LinkBehavior.NeverUnderline;
+            linkLabel4.LinkColor = Color.Black;
+            linkLabel4.Location = new Point(158, 0);
+            linkLabel4.Name = "linkLabel4";
+            linkLabel4.Size = new Size(33, 17);
+            linkLabel4.TabIndex = 4;
+            linkLabel4.TabStop = true;
+            linkLabel4.Text = "Post";
+            linkLabel4.LinkClicked += linkLabel4_LinkClicked;
             // 
             // Categories
             // 
@@ -275,9 +259,9 @@
             ((System.ComponentModel.ISupportInitialize)bindingSource1).EndInit();
             ProfileMenuStrip.ResumeLayout(false);
             panel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -300,7 +284,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private PictureBox pictureBox1;
         private LinkLabel linkLabel1;
-        private LinkLabel linkLabel2;
         private LinkLabel linkLabel3;
         private LinkLabel linkLabel4;
     }

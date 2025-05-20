@@ -41,7 +41,6 @@
             flowLayoutPanel1 = new FlowLayoutPanel();
             pictureBox1 = new PictureBox();
             home = new LinkLabel();
-            explore = new LinkLabel();
             categories = new LinkLabel();
             post = new LinkLabel();
             search = new TextBox();
@@ -107,7 +106,7 @@
             // 
             ProfileMenuStrip.Items.AddRange(new ToolStripItem[] { myAccountToolStripMenuItem, settingsToolStripMenuItem, logoutToolStripMenuItem });
             ProfileMenuStrip.Name = "ProfileMenuStrip";
-            ProfileMenuStrip.Size = new Size(140, 70);
+            ProfileMenuStrip.Size = new Size(181, 92);
             // 
             // myAccountToolStripMenuItem
             // 
@@ -125,8 +124,9 @@
             // logoutToolStripMenuItem
             // 
             logoutToolStripMenuItem.Name = "logoutToolStripMenuItem";
-            logoutToolStripMenuItem.Size = new Size(139, 22);
+            logoutToolStripMenuItem.Size = new Size(180, 22);
             logoutToolStripMenuItem.Text = "Logout";
+            logoutToolStripMenuItem.Click += logoutToolStripMenuItem_Click_1;
             // 
             // linkLabel7
             // 
@@ -153,7 +153,6 @@
             // 
             flowLayoutPanel1.Controls.Add(pictureBox1);
             flowLayoutPanel1.Controls.Add(home);
-            flowLayoutPanel1.Controls.Add(explore);
             flowLayoutPanel1.Controls.Add(categories);
             flowLayoutPanel1.Controls.Add(post);
             flowLayoutPanel1.Dock = DockStyle.Left;
@@ -186,26 +185,12 @@
             home.Text = "Home";
             home.LinkClicked += home_LinkClicked;
             // 
-            // explore
-            // 
-            explore.Font = new Font("Segoe UI", 10F);
-            explore.LinkBehavior = LinkBehavior.NeverUnderline;
-            explore.LinkColor = Color.Black;
-            explore.Location = new Point(106, 0);
-            explore.Margin = new Padding(0, 0, 20, 0);
-            explore.Name = "explore";
-            explore.Size = new Size(56, 23);
-            explore.TabIndex = 2;
-            explore.TabStop = true;
-            explore.Text = "Explore";
-            explore.LinkClicked += explore_LinkClicked;
-            // 
             // categories
             // 
             categories.Font = new Font("Segoe UI", 10F);
             categories.LinkBehavior = LinkBehavior.NeverUnderline;
             categories.LinkColor = Color.Black;
-            categories.Location = new Point(182, 0);
+            categories.Location = new Point(106, 0);
             categories.Margin = new Padding(0, 0, 20, 0);
             categories.Name = "categories";
             categories.Size = new Size(88, 23);
@@ -219,7 +204,7 @@
             post.Font = new Font("Segoe UI", 10F);
             post.LinkBehavior = LinkBehavior.NeverUnderline;
             post.LinkColor = Color.Black;
-            post.Location = new Point(290, 0);
+            post.Location = new Point(214, 0);
             post.Margin = new Padding(0, 0, 20, 0);
             post.Name = "post";
             post.Size = new Size(43, 23);
@@ -356,7 +341,6 @@
         private System.Windows.Forms.Panel panel2;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel1;
         private System.Windows.Forms.LinkLabel home;
-        private System.Windows.Forms.LinkLabel explore;
         private System.Windows.Forms.LinkLabel categories;
         private System.Windows.Forms.LinkLabel post;
         private System.Windows.Forms.FlowLayoutPanel flowLayoutPanel2;

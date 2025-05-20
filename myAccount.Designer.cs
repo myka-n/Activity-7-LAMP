@@ -33,7 +33,6 @@
             flowLayoutPanel1 = new FlowLayoutPanel();
             logo = new PictureBox();
             linkLabel1 = new LinkLabel();
-            linkLabel2 = new LinkLabel();
             linkLabel3 = new LinkLabel();
             linkLabel4 = new LinkLabel();
             flowLayoutPanel2 = new FlowLayoutPanel();
@@ -75,7 +74,6 @@
             flowLayoutPanel1.BackColor = Color.Transparent;
             flowLayoutPanel1.Controls.Add(logo);
             flowLayoutPanel1.Controls.Add(linkLabel1);
-            flowLayoutPanel1.Controls.Add(linkLabel2);
             flowLayoutPanel1.Controls.Add(linkLabel3);
             flowLayoutPanel1.Controls.Add(linkLabel4);
             flowLayoutPanel1.Location = new Point(12, 0);
@@ -107,20 +105,6 @@
             linkLabel1.TabStop = true;
             linkLabel1.Text = "Home";
             // 
-            // linkLabel2
-            // 
-            linkLabel2.AutoSize = true;
-            linkLabel2.Dock = DockStyle.Top;
-            linkLabel2.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            linkLabel2.LinkBehavior = LinkBehavior.NeverUnderline;
-            linkLabel2.LinkColor = Color.Black;
-            linkLabel2.Location = new Point(81, 0);
-            linkLabel2.Name = "linkLabel2";
-            linkLabel2.Size = new Size(52, 17);
-            linkLabel2.TabIndex = 2;
-            linkLabel2.TabStop = true;
-            linkLabel2.Text = "Explore";
-            // 
             // linkLabel3
             // 
             linkLabel3.AutoSize = true;
@@ -128,7 +112,7 @@
             linkLabel3.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             linkLabel3.LinkBehavior = LinkBehavior.NeverUnderline;
             linkLabel3.LinkColor = Color.Black;
-            linkLabel3.Location = new Point(139, 0);
+            linkLabel3.Location = new Point(81, 0);
             linkLabel3.Name = "linkLabel3";
             linkLabel3.Size = new Size(71, 17);
             linkLabel3.TabIndex = 3;
@@ -142,7 +126,7 @@
             linkLabel4.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             linkLabel4.LinkBehavior = LinkBehavior.NeverUnderline;
             linkLabel4.LinkColor = Color.Black;
-            linkLabel4.Location = new Point(216, 0);
+            linkLabel4.Location = new Point(158, 0);
             linkLabel4.Name = "linkLabel4";
             linkLabel4.Size = new Size(33, 17);
             linkLabel4.TabIndex = 4;
@@ -318,7 +302,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private PictureBox logo;
         private LinkLabel linkLabel1;
-        private LinkLabel linkLabel2;
         private LinkLabel linkLabel3;
         private LinkLabel linkLabel4;
         private FlowLayoutPanel flowLayoutPanel2;
