@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Activity_7
 {
@@ -28,7 +29,7 @@ namespace Activity_7
         private void LoadCategories()
         {
             string query = "SELECT cat_id, cat_name FROM categories ORDER BY cat_name";
-            
+
             DatabaseManager.ExecuteQuery(query, null, reader =>
             {
                 flowlayoutcategories.Controls.Clear();
@@ -66,48 +67,54 @@ namespace Activity_7
 
         private void LoadArtworksByCategory(int categoryId)
         {
+            bool hasData = false;
+            flowlayoutartworks.Controls.Clear();
+
             string query = @"
                 SELECT 
-                    a.art_id,
-                    a.art_title AS Title,
-                    a.art_description AS Description,
-                    a.image_path AS ImagePath,
-                    a.created_at AS CreatedAt,
-                    u.user_id AS ArtistId,
-                    u.username AS ArtistName,
-                    c.cat_id AS CategoryId,
-                    c.cat_name AS CategoryName
-                FROM artworks a
-                JOIN users u ON a.user_id = u.user_id
-                JOIN artwork_categories ac ON a.art_id = ac.art_id
-                JOIN categories c ON ac.cat_id = c.cat_id
-                WHERE ac.cat_id = @categoryId
-                ORDER BY a.created_at DESC";
-
-            bool hasData = false;
+                    art_id,
+                    art_title,
+                    username,
+                    image,
+                    created_at,
+                    category_name,
+                    like_count
+                FROM user_artworks 
+                WHERE category_name = (
+                    SELECT cat_name 
+                    FROM categories 
+                    WHERE cat_id = @categoryId
+                )
+                ORDER BY created_at DESC";
 
             DatabaseManager.ExecuteQuery(query, cmd =>
             {
                 cmd.Parameters.AddWithValue("@categoryId", categoryId);
             }, reader =>
             {
-                flowlayoutartworks.Controls.Clear();
                 while (reader.Read())
                 {
                     hasData = true;
-                    var artwork = new Artwork
+                    string imagePath = reader["image"].ToString();
+                    Image img = null;
+                    if (File.Exists(imagePath))
+                    {
+                        img = Image.FromFile(imagePath);
+                    }
+
+                    var post = new Post
                     {
                         ArtworkId = reader.GetInt32("art_id"),
-                        Title = reader.GetString("Title"),
-                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
-                        ImagePath = reader.GetString("ImagePath"),
-                        CreatedAt = reader.GetDateTime("CreatedAt"),
-                        ArtistId = reader.GetInt32("ArtistId"),
-                        ArtistName = reader.GetString("ArtistName"),
-                        CategoryId = reader.GetInt32("CategoryId"),
-                        CategoryName = reader.GetString("CategoryName")
+                        Title = reader.GetString("art_title"),
+                        Author = reader.GetString("username"),
+                        Timestamp = reader.GetDateTime("created_at"),
+                        Category = reader.GetString("category_name"),
+                        LikeCount = reader.GetInt32("like_count"),
+                        Thumbnail = img
                     };
-                    flowlayoutartworks.Controls.Add(CreateArtworkPanel(artwork));
+
+                    var card = new PostCard(post);
+                    flowlayoutartworks.Controls.Add(card);
                 }
             });
 
@@ -117,85 +124,60 @@ namespace Activity_7
             }
         }
 
-        private Panel CreateArtworkPanel(Artwork artwork)
+        private void SearchArtworks(string keyword)
         {
-            var artPanel = new Panel
-            {
-                Width = 300,
-                Height = 250,
-                BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(10)
-            };
+            bool hasData = false;
+            flowlayoutartworks.Controls.Clear();
 
-            var pictureBox = new PictureBox
-            {
-                Width = 280,
-                Height = 150,
-                Dock = DockStyle.Top,
-                SizeMode = PictureBoxSizeMode.Zoom,
-                Padding = new Padding(10)
-            };
+            string query = @"
+                SELECT 
+                    art_id,
+                    art_title,
+                    username,
+                    image,
+                    created_at,
+                    category_name,
+                    like_count
+                FROM user_artworks 
+                WHERE art_title LIKE @keyword 
+                   OR art_description LIKE @keyword 
+                   OR username LIKE @keyword
+                ORDER BY created_at DESC";
 
-            try
+            DatabaseManager.ExecuteQuery(query, cmd =>
             {
-                if (System.IO.File.Exists(artwork.ImagePath))
+                cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
+            }, reader =>
+            {
+                while (reader.Read())
                 {
-                    pictureBox.Image = Image.FromFile(artwork.ImagePath);
+                    hasData = true;
+                    string imagePath = reader["image"].ToString();
+                    Image img = null;
+                    if (File.Exists(imagePath))
+                    {
+                        img = Image.FromFile(imagePath);
+                    }
+
+                    var post = new Post
+                    {
+                        ArtworkId = reader.GetInt32("art_id"),
+                        Title = reader.GetString("art_title"),
+                        Author = reader.GetString("username"),
+                        Timestamp = reader.GetDateTime("created_at"),
+                        Category = reader.GetString("category_name"),
+                        LikeCount = reader.GetInt32("like_count"),
+                        Thumbnail = img
+                    };
+
+                    var card = new PostCard(post);
+                    flowlayoutartworks.Controls.Add(card);
                 }
-            }
-            catch
+            });
+
+            if (!hasData)
             {
-                pictureBox.Image = null;
-            }
-
-            var lblTitle = new Label
-            {
-                Text = artwork.Title,
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Dock = DockStyle.Top,
-                Height = 30,
-                Padding = new Padding(10, 10, 10, 0),
-                ForeColor = Color.Black
-            };
-
-            var lblArtist = new Label
-            {
-                Text = "by " + artwork.ArtistName,
-                Font = new Font("Segoe UI", 10, FontStyle.Underline),
-                Dock = DockStyle.Top,
-                Height = 25,
-                Padding = new Padding(10, 0, 10, 0),
-                ForeColor = Color.Blue,
-                Cursor = Cursors.Hand,
-                Tag = artwork.ArtistId
-            };
-            lblArtist.Click += ArtistLabel_Click;
-
-            var lblDate = new Label
-            {
-                Text = artwork.CreatedAt.ToString("MMMM dd, yyyy"),
-                Font = new Font("Segoe UI", 9, FontStyle.Regular),
-                Dock = DockStyle.Top,
-                Height = 20,
-                Padding = new Padding(10, 0, 10, 10),
-                ForeColor = Color.DarkGray
-            };
-
-            artPanel.Controls.Add(lblDate);
-            artPanel.Controls.Add(lblArtist);
-            artPanel.Controls.Add(lblTitle);
-            artPanel.Controls.Add(pictureBox);
-
-            return artPanel;
-        }
-
-        private void ArtistLabel_Click(object sender, EventArgs e)
-        {
-            if (sender is Label artistLabel && artistLabel.Tag is int artistId)
-            {
-                var artistProfileForm = new ArtistProfileForm(artistId);
-                artistProfileForm.Show();
+                MessageBox.Show("No artworks matched your search.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
@@ -204,7 +186,7 @@ namespace Activity_7
             string keyword = searchtextbox.Text.Trim();
             if (!string.IsNullOrEmpty(keyword))
             {
-                SearchAllArtworks(keyword);
+                SearchArtworks(keyword);
             }
             else
             {
@@ -212,51 +194,58 @@ namespace Activity_7
             }
         }
 
-        private void SearchAllArtworks(string keyword)
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
         {
-            string query = @"
-                SELECT 
-                    a.art_id,
-                    a.art_title AS Title,
-                    a.art_description AS Description,
-                    a.image_path AS ImagePath,
-                    a.created_at AS CreatedAt,
-                    u.user_id AS ArtistId,
-                    u.username AS ArtistName
-                FROM artworks a
-                JOIN users u ON a.user_id = u.user_id
-                WHERE a.art_title LIKE @keyword
-                ORDER BY a.created_at DESC";
+            //Home
+            this.Hide();
+            var homepage = new Homepage();
+            homepage.FormClosed += (s, args) => this.Close();
+            homepage.Show();
+        }
 
-            bool hasData = false;
+        private void linkLabel3_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //Categories
+            this.Hide();
+            var categories = new Categories();
+            categories.FormClosed += (s, args) => this.Close();
+            categories.Show();
+        }
 
-            DatabaseManager.ExecuteQuery(query, cmd =>
-            {
-                cmd.Parameters.AddWithValue("@keyword", "%" + keyword + "%");
-            }, reader =>
-            {
-                flowlayoutartworks.Controls.Clear();
-                while (reader.Read())
-                {
-                    hasData = true;
-                    var artwork = new Artwork
-                    {
-                        ArtworkId = reader.GetInt32("art_id"),
-                        Title = reader.GetString("Title"),
-                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
-                        ImagePath = reader.GetString("ImagePath"),
-                        CreatedAt = reader.GetDateTime("CreatedAt"),
-                        ArtistId = reader.GetInt32("ArtistId"),
-                        ArtistName = reader.GetString("ArtistName")
-                    };
-                    flowlayoutartworks.Controls.Add(CreateArtworkPanel(artwork));
-                }
-            });
+        private void linkLabel4_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //Upload
+            var uploadForm = new Upload();
+            uploadForm.Owner = this;
+            this.Hide();
+            uploadForm.ShowDialog();
+            this.Show();
+        }
 
-            if (!hasData)
-            {
-                MessageBox.Show("No artworks matched your search.", "No Results", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
+        private void linkLabel5_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            //Profile -> attach profilemenustrip
+            ProfileMenuStrip.Show(linkLabel5, new Point(0, linkLabel5.Height));
+        }
+
+        private void myAccountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Hide();
+            var myaccount = new MyAccount();
+            myaccount.FormClosed += (s, args) => this.Close();
+            myaccount.Show();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void logoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Session.Clear();
+            this.Hide();
+            new Login().ShowDialog();
         }
     }
 }

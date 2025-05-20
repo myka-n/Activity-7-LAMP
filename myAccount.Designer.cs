@@ -50,22 +50,23 @@
             labelusername = new Label();
             flowLayoutArtworks = new FlowLayoutPanel();
             lblArtworks = new Label();
+            panel1 = new Panel();
             panel2.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)logo).BeginInit();
             flowLayoutPanel2.SuspendLayout();
             ProfileMenuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)profilepic).BeginInit();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // panel2
             // 
-            panel2.BackColor = SystemColors.ControlLight;
+            panel2.BackColor = SystemColors.Control;
             panel2.Controls.Add(flowLayoutPanel1);
-            panel2.Controls.Add(flowLayoutPanel2);
-            panel2.Location = new Point(0, 1);
+            panel2.Location = new Point(13, 13);
             panel2.Name = "panel2";
-            panel2.Size = new Size(601, 28);
+            panel2.Size = new Size(314, 28);
             panel2.TabIndex = 7;
             // 
             // flowLayoutPanel1
@@ -156,7 +157,7 @@
             flowLayoutPanel2.Controls.Add(linkLabel7);
             flowLayoutPanel2.Controls.Add(search);
             flowLayoutPanel2.FlowDirection = FlowDirection.RightToLeft;
-            flowLayoutPanel2.Location = new Point(372, 0);
+            flowLayoutPanel2.Location = new Point(544, 16);
             flowLayoutPanel2.Name = "flowLayoutPanel2";
             flowLayoutPanel2.Size = new Size(217, 27);
             flowLayoutPanel2.TabIndex = 6;
@@ -222,23 +223,23 @@
             // 
             // profilepic
             // 
-            profilepic.Location = new Point(44, 97);
+            profilepic.Location = new Point(24, 90);
             profilepic.Name = "profilepic";
-            profilepic.Size = new Size(111, 59);
+            profilepic.Size = new Size(113, 101);
             profilepic.SizeMode = PictureBoxSizeMode.StretchImage;
             profilepic.TabIndex = 8;
             profilepic.TabStop = false;
             // 
             // bio
             // 
-            bio.Location = new Point(44, 187);
+            bio.Location = new Point(24, 229);
             bio.Name = "bio";
             bio.Size = new Size(216, 23);
             bio.TabIndex = 9;
             // 
             // btnEditProfile
             // 
-            btnEditProfile.Location = new Point(44, 227);
+            btnEditProfile.Location = new Point(24, 276);
             btnEditProfile.Name = "btnEditProfile";
             btnEditProfile.Size = new Size(75, 23);
             btnEditProfile.TabIndex = 10;
@@ -248,7 +249,7 @@
             // labelusername
             // 
             labelusername.AutoSize = true;
-            labelusername.Location = new Point(44, 169);
+            labelusername.Location = new Point(24, 211);
             labelusername.Name = "labelusername";
             labelusername.Size = new Size(60, 15);
             labelusername.TabIndex = 13;
@@ -256,33 +257,46 @@
             // 
             // flowLayoutArtworks
             // 
-            flowLayoutArtworks.Location = new Point(12, 300);
-            flowLayoutArtworks.Size = new Size(571, 400);
             flowLayoutArtworks.AutoScroll = true;
-            flowLayoutArtworks.BackColor = System.Drawing.Color.White;
-            flowLayoutArtworks.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            flowLayoutArtworks.BackColor = Color.White;
+            flowLayoutArtworks.BorderStyle = BorderStyle.FixedSingle;
+            flowLayoutArtworks.Location = new Point(24, 344);
             flowLayoutArtworks.Name = "flowLayoutArtworks";
+            flowLayoutArtworks.Size = new Size(571, 400);
+            flowLayoutArtworks.TabIndex = 2;
             // 
             // lblArtworks
             // 
-            lblArtworks.Text = "My Artworks";
-            lblArtworks.Location = new Point(12, 270);
             lblArtworks.AutoSize = true;
-            lblArtworks.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            lblArtworks.Font = new Font("Segoe UI", 12F, FontStyle.Bold);
+            lblArtworks.Location = new Point(24, 314);
             lblArtworks.Name = "lblArtworks";
+            lblArtworks.Size = new Size(106, 21);
+            lblArtworks.TabIndex = 1;
+            lblArtworks.Text = "My Artworks";
+            // 
+            // panel1
+            // 
+            panel1.Controls.Add(panel2);
+            panel1.Controls.Add(flowLayoutPanel2);
+            panel1.Location = new Point(-1, -1);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(786, 54);
+            panel1.TabIndex = 14;
             // 
             // MyAccount
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(602, 749);
+            AutoScroll = true;
+            ClientSize = new Size(784, 700);
+            Controls.Add(panel1);
             Controls.Add(lblArtworks);
             Controls.Add(flowLayoutArtworks);
             Controls.Add(labelusername);
             Controls.Add(btnEditProfile);
             Controls.Add(bio);
             Controls.Add(profilepic);
-            Controls.Add(panel2);
             Name = "MyAccount";
             Text = "MyAccount";
             panel2.ResumeLayout(false);
@@ -293,6 +307,7 @@
             flowLayoutPanel2.PerformLayout();
             ProfileMenuStrip.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)profilepic).EndInit();
+            panel1.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
@@ -320,5 +335,6 @@
         private Label labelusername;
         private FlowLayoutPanel flowLayoutArtworks;
         private Label lblArtworks;
+        private Panel panel1;
     }
 }

@@ -20,9 +20,13 @@ namespace Activity_7
         private DateTimePicker dtpStartDate;
         private DateTimePicker dtpEndDate;
         private ComboBox cmbCategories;
+        private Button btnViewLogs;
+        private Button btnLogout;
+        private int currentAdminId;
 
-        public AdminDashboard()
+        public AdminDashboard(int adminId)
         {
+            this.currentAdminId = adminId;
             InitializeComponent();
             InitializeUI();
             LoadUsers();
@@ -124,6 +128,26 @@ namespace Activity_7
             };
             btnGenerateArtworkReport.Click += BtnGenerateArtworkReport_Click;
 
+            // Add View Logs button
+            btnViewLogs = new Button
+            {
+                Text = "View Logs",
+                Location = new Point(380, 450),
+                Size = new Size(200, 30)
+            };
+            btnViewLogs.Click += BtnViewLogs_Click;
+
+            // Add Logout button
+            btnLogout = new Button
+            {
+                Text = "Logout",
+                Location = new Point(600, 450),
+                Size = new Size(200, 30),
+                BackColor = Color.LightCoral,
+                ForeColor = Color.White
+            };
+            btnLogout.Click += BtnLogout_Click;
+
             // Add controls to form
             this.Controls.AddRange(new Control[] {
                 dgvUsers,
@@ -135,7 +159,9 @@ namespace Activity_7
                 dtpEndDate,
                 cmbCategories,
                 btnGenerateUserReport,
-                btnGenerateArtworkReport
+                btnGenerateArtworkReport,
+                btnViewLogs,
+                btnLogout
             });
         }
 
@@ -152,15 +178,12 @@ namespace Activity_7
                             u.user_id,
                             u.username,
                             u.email,
-                            u.created_at,
-                            u.last_login,
                             u.role,
                             COUNT(a.art_id) as artwork_count
                         FROM users u
                         LEFT JOIN artworks a ON u.user_id = a.user_id
-                        WHERE u.is_active = 1
                         GROUP BY u.user_id
-                        ORDER BY u.created_at DESC";
+                        ORDER BY u.user_id DESC";
 
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     MySqlDataAdapter adapter = new MySqlDataAdapter(cmd);
@@ -207,8 +230,16 @@ namespace Activity_7
 
         private void BtnAddUser_Click(object sender, EventArgs e)
         {
-            // TODO: Implement AddUserForm
-            MessageBox.Show("Add User functionality to be implemented", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            int adminId = GetCurrentAdminId();
+            
+            using (var addUserForm = new AddUserForm())
+            {
+                if (addUserForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadUsers(); // Refresh the user list
+                    AuditLogger.LogAction(adminId, "ADD_USER", "Added new user");
+                }
+            }
         }
 
         private void BtnEditUser_Click(object sender, EventArgs e)
@@ -219,9 +250,18 @@ namespace Activity_7
                 return;
             }
 
+            int adminId = GetCurrentAdminId();
             int userId = Convert.ToInt32(dgvUsers.SelectedRows[0].Cells["user_id"].Value);
-            // TODO: Implement EditUserForm
-            MessageBox.Show($"Edit User {userId} functionality to be implemented", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string username = dgvUsers.SelectedRows[0].Cells["username"].Value.ToString();
+
+            using (var editUserForm = new EditUserForm(userId))
+            {
+                if (editUserForm.ShowDialog() == DialogResult.OK)
+                {
+                    LoadUsers(); // Refresh the user list
+                    AuditLogger.LogAction(adminId, "EDIT_USER", $"Edited user {username} (ID: {userId})");
+                }
+            }
         }
 
         private void BtnDeleteUser_Click(object sender, EventArgs e)
@@ -232,6 +272,7 @@ namespace Activity_7
                 return;
             }
 
+            int adminId = GetCurrentAdminId();
             int userId = Convert.ToInt32(dgvUsers.SelectedRows[0].Cells["user_id"].Value);
             string username = dgvUsers.SelectedRows[0].Cells["username"].Value.ToString();
 
@@ -249,13 +290,14 @@ namespace Activity_7
                     try
                     {
                         conn.Open();
-                        string query = "UPDATE users SET is_active = 0 WHERE user_id = @UserId";
+                        string query = "DELETE FROM users WHERE user_id = @UserId";
                         MySqlCommand cmd = new MySqlCommand(query, conn);
                         cmd.Parameters.AddWithValue("@UserId", userId);
                         cmd.ExecuteNonQuery();
 
                         MessageBox.Show("User deleted successfully.", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         LoadUsers();
+                        AuditLogger.LogAction(adminId, "DELETE_USER", $"Deleted user {username} (ID: {userId})");
                     }
                     catch (Exception ex)
                     {
@@ -263,6 +305,11 @@ namespace Activity_7
                     }
                 }
             }
+        }
+
+        private int GetCurrentAdminId()
+        {
+            return currentAdminId;
         }
 
         private void BtnGenerateUserReport_Click(object sender, EventArgs e)
@@ -310,6 +357,78 @@ namespace Activity_7
                     }
                 }
             }
+        }
+
+        private void BtnViewLogs_Click(object sender, EventArgs e)
+        {
+            using (var logsForm = new LogsViewerForm())
+            {
+                logsForm.ShowDialog();
+            }
+        }
+
+        private void BtnLogout_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                // Log the logout activity
+                string username = GetCurrentAdminUsername();
+                
+                // Log to user activity logs
+                string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+                using (MySqlConnection conn = new MySqlConnection(connStr))
+                {
+                    conn.Open();
+                    string query = @"
+                        INSERT INTO user_activity_logs 
+                        (user_id, activity_type, timestamp) 
+                        VALUES 
+                        (@UserId, 'LOGOUT', @Timestamp)";
+
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@UserId", currentAdminId);
+                    cmd.Parameters.AddWithValue("@Timestamp", DateTime.Now);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Show confirmation message
+                MessageBox.Show("Logged out successfully.", "Logout", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Open login form and close dashboard
+                var loginForm = new Login();
+                loginForm.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error during logout: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private string GetCurrentAdminUsername()
+        {
+            string username = "Admin"; // Default value
+            string connStr = ConfigurationManager.ConnectionStrings["MySqlConnection"].ConnectionString;
+            using (MySqlConnection conn = new MySqlConnection(connStr))
+            {
+                try
+                {
+                    conn.Open();
+                    string query = "SELECT username FROM users WHERE user_id = @UserId";
+                    MySqlCommand cmd = new MySqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@UserId", GetCurrentAdminId());
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                    {
+                        username = result.ToString();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error getting admin username: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            return username;
         }
     }
 } 

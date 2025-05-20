@@ -435,55 +435,76 @@ namespace Activity_7
                 try
                 {
                     conn.Open();
-                    string query = "SELECT user_id, username, email, password_hash, profile_pic, bio, role FROM users WHERE email = @Email AND is_active = 1";
+                    string query = "SELECT user_id, username, email, password, profile_pic, bio, role FROM users WHERE email = @Email";
                     MySqlCommand cmd = new MySqlCommand(query, conn);
                     cmd.Parameters.AddWithValue("@Email", textBox1.Text); // Email textbox
                     MySqlDataReader reader = cmd.ExecuteReader();
 
                     if (reader.Read())
                     {
-                        string dbHashedPassword = reader["password_hash"].ToString();
+                        string dbHashedPassword = reader["password"].ToString();
                         string enteredPassword = textBox2.Text; // Password textbox
                         bool rememberMe = checkBox1.Checked; // Get the state of the checkbox
+
+                        // Store all user data before closing reader
+                        int userId = reader.GetInt32("user_id");
+                        string role = reader.GetString("role");
+                        string username = reader.GetString("username");
+                        string email = reader["email"].ToString();
+                        string profilePic = reader["profile_pic"].ToString();
+                        string bio = reader["bio"].ToString();
+                        
+                        // Close the reader before executing additional commands
+                        reader.Close();
+
+                        // Set session variables with stored values
+                        Session.UserId = userId;
+                        Session.Username = username;
+                        Session.Email = email;
+                        Session.ProfilePicPath = profilePic;
+                        Session.Bio = bio;
+                        Session.Role = role;
+                        Session.RememberMe = rememberMe;
 
                         // Hash the entered password and compare it to the stored hash
                         string enteredHashedPassword = HashPassword(enteredPassword);
 
                         if (enteredHashedPassword == dbHashedPassword)
                         {
-                            // ⭐ SET THE SESSION VALUES
-                            Session.UserId = Convert.ToInt32(reader["user_id"]);
-                            Session.Username = reader["username"].ToString();
-                            Session.Email = reader["email"].ToString();
-                            Session.ProfilePicPath = reader["profile_pic"] != DBNull.Value ? reader["profile_pic"].ToString() : "";
-                            Session.Bio = reader["bio"].ToString();
-                            Session.Role = reader["role"].ToString();
-                            Session.RememberMe = rememberMe; // Store RememberMe state
+                            // Debug information
+                            Console.WriteLine($"Logging in user: ID={userId}, Username={username}, Role={role}");
 
-                            // Save login information if "Remember Me" is checked
-                            if (rememberMe)
+                            // Update last login
+                            string updateQuery = "UPDATE users SET last_login = @LastLogin WHERE user_id = @UserId";
+                            MySqlCommand updateCmd = new MySqlCommand(updateQuery, conn);
+                            updateCmd.Parameters.AddWithValue("@LastLogin", DateTime.Now);
+                            updateCmd.Parameters.AddWithValue("@UserId", userId);
+                            updateCmd.ExecuteNonQuery();
+
+                            // Log the login activity
+                            string activityQuery = @"
+                                INSERT INTO user_activity_logs 
+                                (user_id, activity_type, timestamp) 
+                                VALUES 
+                                (@UserId, 'LOGIN', @Timestamp)";
+                            MySqlCommand activityCmd = new MySqlCommand(activityQuery, conn);
+                            activityCmd.Parameters.AddWithValue("@UserId", userId);
+                            activityCmd.Parameters.AddWithValue("@Timestamp", DateTime.Now);
+                            activityCmd.ExecuteNonQuery();
+
+                            // Open appropriate form based on role
+                            if (role.ToLower() == "admin")
                             {
-                                SaveRememberedLogin(textBox1.Text, enteredPassword);
+                                MessageBox.Show($"Logging in as admin: ID={userId}, Username={username}", "Debug Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                var adminDashboard = new AdminDashboard(userId);
+                                adminDashboard.Show();
+                                this.Hide();
                             }
                             else
                             {
-                                ClearRememberedLogin();
-                            }
-
-                            // Successful login
-                            MessageBox.Show("Login successful!", "Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            this.Hide(); // Hide login form
-
-                            // Show appropriate form based on user role
-                            if (Session.Role.ToLower() == "admin")
-                            {
-                                AdminDashboard adminForm = new AdminDashboard();
-                                adminForm.ShowDialog();
-                            }
-                            else
-                            {
-                                Homepage homepageForm = new Homepage();
-                                homepageForm.ShowDialog();
+                                var homepage = new Homepage();
+                                homepage.Show();
+                                this.Hide();
                             }
                         }
                         else
@@ -495,7 +516,6 @@ namespace Activity_7
                     {
                         MessageBox.Show("Email not found or account is inactive.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                    reader.Close(); // Close the reader.  Important!
                 }
                 catch (MySqlException ex)
                 {

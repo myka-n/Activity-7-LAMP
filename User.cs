@@ -10,6 +10,7 @@ namespace Activity_7
         public string PasswordHash { get; set; }
         public string ProfilePic { get; set; }
         public string Bio { get; set; }
+        public string FullName { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? LastLogin { get; set; }
         public bool IsActive { get; set; }

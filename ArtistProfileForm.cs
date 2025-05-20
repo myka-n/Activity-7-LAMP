@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
@@ -7,175 +8,285 @@ namespace Activity_7
 {
     public partial class ArtistProfileForm : Form
     {
-        private readonly int artistId;
+        private string artistUsername;
+        private Panel profilePanel;
+        private PictureBox picProfile;
+        private Label lblArtistName;
+        private Label lblBio;
+        private FlowLayoutPanel flowLayoutArtworks;
 
-        public ArtistProfileForm(int artistId)
+        public ArtistProfileForm(string username)
         {
+            artistUsername = username;
             InitializeComponent();
-            this.artistId = artistId;
-            this.Load += ArtistProfileForm_Load;
+            LoadArtistProfile();
+            LoadArtworks();
         }
 
-        private void ArtistProfileForm_Load(object sender, EventArgs e)
+        private void InitializeComponent()
         {
-            try
-            {
-                LoadArtistProfile();
-                LoadArtistArtworks();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Error loading artist profile: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            profilePanel = new Panel();
+            picProfile = new PictureBox();
+            flowLayoutArtworks = new FlowLayoutPanel();
+            lblArtistName = new Label();
+            lblBio = new Label();
+            this.label1 = new Label();
+            profilePanel.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)picProfile).BeginInit();
+            SuspendLayout();
+            // 
+            // profilePanel
+            // 
+            profilePanel.Controls.Add(this.label1);
+            profilePanel.Controls.Add(picProfile);
+            profilePanel.Controls.Add(flowLayoutArtworks);
+            profilePanel.Controls.Add(lblArtistName);
+            profilePanel.Controls.Add(lblBio);
+            profilePanel.Location = new Point(-1, 0);
+            profilePanel.Name = "profilePanel";
+            profilePanel.Size = new Size(634, 615);
+            profilePanel.TabIndex = 0;
+            // 
+            // picProfile
+            // 
+            picProfile.Location = new Point(34, 50);
+            picProfile.Name = "picProfile";
+            picProfile.Size = new Size(108, 97);
+            picProfile.SizeMode = PictureBoxSizeMode.StretchImage;
+            picProfile.TabIndex = 0;
+            picProfile.TabStop = false;
+            // 
+            // flowLayoutArtworks
+            // 
+            flowLayoutArtworks.AutoScroll = true;
+            flowLayoutArtworks.Location = new Point(34, 203);
+            flowLayoutArtworks.Name = "flowLayoutArtworks";
+            flowLayoutArtworks.Size = new Size(580, 428);
+            flowLayoutArtworks.TabIndex = 1;
+            // 
+            // lblArtistName
+            // 
+            lblArtistName.Font = new Font("Segoe UI Emoji", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblArtistName.Location = new Point(162, 50);
+            lblArtistName.Name = "lblArtistName";
+            lblArtistName.Size = new Size(172, 29);
+            lblArtistName.TabIndex = 1;
+            // 
+            // lblBio
+            // 
+            lblBio.Location = new Point(162, 88);
+            lblBio.Name = "lblBio";
+            lblBio.Size = new Size(172, 32);
+            lblBio.TabIndex = 2;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new Font("Yu Gothic", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            this.label1.Location = new Point(37, 171);
+            this.label1.Name = "label1";
+            this.label1.Size = new Size(79, 21);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Artworks";
+            // 
+            // ArtistProfileForm
+            // 
+            BackColor = Color.White;
+            ClientSize = new Size(634, 711);
+            Controls.Add(profilePanel);
+            Name = "ArtistProfileForm";
+            Text = "Artist Profile";
+            profilePanel.ResumeLayout(false);
+            profilePanel.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)picProfile).EndInit();
+            ResumeLayout(false);
         }
 
         private void LoadArtistProfile()
         {
-            string query = @"
-                SELECT 
-                    u.username,
-                    u.profile_pic,
-                    u.bio
-                FROM users u
-                WHERE u.user_id = @artistId";
+            using (MySqlConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT username, bio, profile_pic FROM users WHERE username = @username";
 
-            DatabaseManager.ExecuteQuery(query, cmd =>
-            {
-                cmd.Parameters.AddWithValue("@artistId", artistId);
-            }, reader =>
-            {
-                if (reader.Read())
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    lblArtistName.Text = reader.GetString("username");
-                    txtBio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString("bio");
-
-                    string profilePicPath = reader.IsDBNull(reader.GetOrdinal("profile_pic")) ? null : reader.GetString("profile_pic");
-                    if (!string.IsNullOrEmpty(profilePicPath) && System.IO.File.Exists(profilePicPath))
+                    command.Parameters.AddWithValue("@username", artistUsername);
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        pictureBoxProfile.Image = Image.FromFile(profilePicPath);
+                        if (reader.Read())
+                        {
+                            lblArtistName.Text = reader.GetString("username");
+                            lblBio.Text = reader.IsDBNull(reader.GetOrdinal("bio")) ? "" : reader.GetString("bio");
+
+                            if (!reader.IsDBNull(reader.GetOrdinal("profile_pic")))
+                            {
+                                string imagePath = reader.GetString("profile_pic");
+                                try
+                                {
+                                    if (File.Exists(imagePath))
+                                    {
+                                        picProfile.Image = Image.FromFile(imagePath);
+                                    }
+                                    else
+                                    {
+                                        picProfile.Image = SystemIcons.Warning.ToBitmap(); // fallback image
+                                    }
+                                }
+                                catch
+                                {
+                                    picProfile.Image = SystemIcons.Error.ToBitmap(); // error fallback
+                                }
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("Artist not found.");
+                            this.Close();
+                        }
                     }
                 }
-            });
+            }
         }
 
-        private void LoadArtistArtworks()
+        private void LoadArtworks()
         {
-            string query = @"
-                SELECT 
-                    a.art_id,
-                    a.art_title AS Title,
-                    a.art_description AS Description,
-                    a.image_path AS ImagePath,
-                    a.created_at AS CreatedAt,
-                    u.user_id AS ArtistId,
-                    u.username AS ArtistName,
-                    c.cat_id AS CategoryId,
-                    c.cat_name AS CategoryName
-                FROM artworks a
-                JOIN users u ON a.user_id = u.user_id
-                LEFT JOIN artwork_categories ac ON a.art_id = ac.art_id
-                LEFT JOIN categories c ON ac.cat_id = c.cat_id
-                WHERE a.user_id = @artistId
-                ORDER BY a.created_at DESC";
+            using (MySqlConnection connection = DatabaseHelper.GetConnection())
+            {
+                connection.Open();
+                string query = "SELECT art_title, category_name, image, created_at, like_count, art_description FROM user_artworks WHERE username = @username ORDER BY created_at DESC";
 
-            DatabaseManager.ExecuteQuery(query, cmd =>
-            {
-                cmd.Parameters.AddWithValue("@artistId", artistId);
-            }, reader =>
-            {
-                flowLayoutArtworks.Controls.Clear();
-                while (reader.Read())
+                using (MySqlCommand command = new MySqlCommand(query, connection))
                 {
-                    var artwork = new Artwork
+                    command.Parameters.AddWithValue("@username", artistUsername);
+                    using (MySqlDataReader reader = command.ExecuteReader())
                     {
-                        ArtworkId = reader.GetInt32("art_id"),
-                        Title = reader.GetString("Title"),
-                        Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? "" : reader.GetString("Description"),
-                        ImagePath = reader.GetString("ImagePath"),
-                        CreatedAt = reader.GetDateTime("CreatedAt"),
-                        ArtistId = reader.GetInt32("ArtistId"),
-                        ArtistName = reader.GetString("ArtistName"),
-                        CategoryId = reader.IsDBNull(reader.GetOrdinal("CategoryId")) ? null : (int?)reader.GetInt32("CategoryId"),
-                        CategoryName = reader.IsDBNull(reader.GetOrdinal("CategoryName")) ? null : reader.GetString("CategoryName")
-                    };
-                    flowLayoutArtworks.Controls.Add(CreateArtworkPanel(artwork));
+                        while (reader.Read())
+                        {
+                            Artwork artwork = new Artwork
+                            {
+                                Title = reader.GetString("art_title"),
+                                Category = reader.GetString("category_name"),
+                                ImagePath = reader.GetString("image"),
+                                CreatedAt = reader.GetDateTime("created_at"),
+                                LikeCount = reader.GetInt32("like_count"),
+                                Description = reader.IsDBNull(reader.GetOrdinal("art_description")) ? "" : reader.GetString("art_description")
+                            };
+                            flowLayoutArtworks.Controls.Add(CreateArtworkPanel(artwork));
+                        }
+                    }
                 }
-            });
+            }
         }
 
         private Panel CreateArtworkPanel(Artwork artwork)
         {
-            var artPanel = new Panel
+            Panel panel = new Panel
             {
-                Width = 300,
-                Height = 250,
+                Width = 200,
+                Height = 320,
+                Margin = new Padding(10),
                 BackColor = Color.White,
-                BorderStyle = BorderStyle.FixedSingle,
-                Margin = new Padding(10)
+                BorderStyle = BorderStyle.FixedSingle
             };
 
-            var pictureBox = new PictureBox
+            PictureBox pictureBox = new PictureBox
             {
-                Width = 280,
-                Height = 150,
-                Dock = DockStyle.Top,
+                Width = 180,
+                Height = 140,
                 SizeMode = PictureBoxSizeMode.Zoom,
-                Padding = new Padding(10)
+                Top = 10,
+                Left = 10
             };
 
             try
             {
-                if (System.IO.File.Exists(artwork.ImagePath))
+                if (File.Exists(artwork.ImagePath))
                 {
                     pictureBox.Image = Image.FromFile(artwork.ImagePath);
+                }
+                else
+                {
+                    pictureBox.Image = SystemIcons.Warning.ToBitmap(); // fallback image
                 }
             }
             catch
             {
-                pictureBox.Image = null;
+                pictureBox.Image = SystemIcons.Error.ToBitmap(); // error fallback
             }
 
-            var lblTitle = new Label
+            Label lblTitle = new Label
             {
                 Text = artwork.Title,
-                Font = new Font("Segoe UI", 12, FontStyle.Bold),
-                Dock = DockStyle.Top,
-                Height = 30,
-                Padding = new Padding(10, 10, 10, 0),
-                ForeColor = Color.Black
+                AutoSize = false,
+                Width = 180,
+                Top = pictureBox.Bottom + 5,
+                Left = 10,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold)
             };
 
-            var lblCategory = new Label
+            Label lblCategory = new Label
             {
-                Text = artwork.CategoryName ?? "Uncategorized",
-                Font = new Font("Segoe UI", 10),
-                Dock = DockStyle.Top,
-                Height = 25,
-                Padding = new Padding(10, 0, 10, 0),
-                ForeColor = Color.DarkGray
+                Text = "Category: " + artwork.Category,
+                AutoSize = false,
+                Width = 180,
+                Top = lblTitle.Bottom + 2,
+                Left = 10,
+                Font = new Font("Segoe UI", 9)
             };
 
-            var lblDate = new Label
+            Label lblDescription = new Label
             {
-                Text = artwork.CreatedAt.ToString("MMMM dd, yyyy"),
+                Text = artwork.Description,
+                AutoSize = false,
+                Width = 180,
+                Height = 40,
+                Top = lblCategory.Bottom + 2,
+                Left = 10,
+                Font = new Font("Segoe UI", 8),
+                ForeColor = Color.DimGray
+            };
+
+            Label lblLikes = new Label
+            {
+                Text = "❤️ " + artwork.LikeCount + " likes",
+                AutoSize = false,
+                Width = 180,
+                Top = lblDescription.Bottom + 2,
+                Left = 10,
                 Font = new Font("Segoe UI", 9),
-                Dock = DockStyle.Top,
-                Height = 20,
-                Padding = new Padding(10, 0, 10, 10),
-                ForeColor = Color.DarkGray
+                ForeColor = Color.DarkRed
             };
 
-            artPanel.Controls.Add(lblDate);
-            artPanel.Controls.Add(lblCategory);
-            artPanel.Controls.Add(lblTitle);
-            artPanel.Controls.Add(pictureBox);
+            Label lblCreatedAt = new Label
+            {
+                Text = "Uploaded: " + artwork.CreatedAt.ToString("MMMM dd, yyyy"),
+                AutoSize = false,
+                Width = 180,
+                Top = lblLikes.Bottom + 2,
+                Left = 10,
+                Font = new Font("Segoe UI", 8),
+                ForeColor = Color.Gray
+            };
 
-            return artPanel;
+            panel.Controls.Add(pictureBox);
+            panel.Controls.Add(lblTitle);
+            panel.Controls.Add(lblCategory);
+            panel.Controls.Add(lblDescription);
+            panel.Controls.Add(lblLikes);
+            panel.Controls.Add(lblCreatedAt);
+
+            return panel;
         }
 
-        private void ArtistProfileForm_Load_1(object sender, EventArgs e)
+        private class Artwork
         {
-
+            public string Title { get; set; }
+            public string Category { get; set; }
+            public string ImagePath { get; set; }
+            public DateTime CreatedAt { get; set; }
+            public int LikeCount { get; set; }
+            public string Description { get; set; }
         }
     }
 }

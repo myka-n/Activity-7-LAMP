@@ -2,6 +2,7 @@ using System;
 using System.Windows.Forms;
 using MySql.Data.MySqlClient;
 
+
 namespace Activity_7
 {
     internal static class Program
@@ -12,6 +13,7 @@ namespace Activity_7
         [STAThread]
         static void Main(string[] args)
         {
+            
             // Initialize application configuration
             ApplicationConfiguration.Initialize();
 

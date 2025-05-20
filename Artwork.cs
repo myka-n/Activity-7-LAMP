@@ -13,5 +13,6 @@ namespace Activity_7
         public string ArtistName { get; set; }
         public int? CategoryId { get; set; }
         public string CategoryName { get; set; }
+        public int LikeCount { get; set; }
     }
 } 
